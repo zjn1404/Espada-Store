@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AppException extends RuntimeException{
+public class AppException extends RuntimeException {
     ErrorCode errorCode;
 }

@@ -1,6 +1,5 @@
 package com.nqt.spring_boot_espada_store.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,14 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import javax.crypto.spec.SecretKeySpec;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -25,46 +20,34 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/user", "/auth/token", "/auth/introspect"
+            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
     };
 
-    @Value("${jwt.signerKey}")
-    private String SIGNER_KEY;
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomJwtDecoder customJwtDecoder, AfterAuthorizationFilterExceptionHandler exceptionHandler) throws Exception {
 
-        http.authorizeHttpRequests(
-                configurer -> {
-                    configurer.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                            .anyRequest().authenticated();
-                }
-        );
+        http.addFilterBefore(exceptionHandler, LogoutFilter.class);
 
-        http.oauth2ResourceServer(
-                configurer -> {
-                    configurer.jwt(
-                            jwtConfigurer -> {
-                                jwtConfigurer.decoder(jwtDecoder())
-                                        .jwtAuthenticationConverter(jwtAuthenticationConverter());
-                            })
-                            .authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-                }
-        );
+        http.authorizeHttpRequests(configurer -> {
+            configurer
+                    .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS)
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated();
+        });
+
+        http.oauth2ResourceServer(configurer -> {
+            configurer
+                    .jwt(jwtConfigurer -> {
+                        jwtConfigurer.decoder(customJwtDecoder)
+                                .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                    })
+                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+        });
 
         http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(SIGNER_KEY.getBytes(), "SH512");
-
-        return NimbusJwtDecoder
-                .withSecretKey(secretKeySpec)
-                .macAlgorithm(MacAlgorithm.HS512)
-                .build();
     }
 
     @Bean

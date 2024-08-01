@@ -1,11 +1,12 @@
 package com.nqt.spring_boot_espada_store.exception;
 
-import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,7 +19,8 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         apiResponse.setResult(e.getMessage());
 
-        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getHttpStatus()).body(apiResponse);
+        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getHttpStatus())
+                .body(apiResponse);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -43,7 +45,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<ApiResponse<MethodArgumentNotValidException>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    ResponseEntity<ApiResponse<MethodArgumentNotValidException>> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
         ErrorCode errorCode = ErrorCode.INVALID_KEY;
 
         try {

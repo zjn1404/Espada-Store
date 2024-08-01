@@ -1,17 +1,20 @@
 package com.nqt.spring_boot_espada_store.controller;
 
+import java.util.List;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 import com.nqt.spring_boot_espada_store.service.UserService;
-import jakarta.validation.Valid;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")

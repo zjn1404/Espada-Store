@@ -1,15 +1,17 @@
 package com.nqt.spring_boot_espada_store.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
 import com.nqt.spring_boot_espada_store.dto.request.PermissionRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.PermissionResponse;
 import com.nqt.spring_boot_espada_store.service.PermissionService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/permission")
@@ -30,7 +32,7 @@ public class PermissionController {
     }
 
     @GetMapping
-    public  ApiResponse<List<PermissionResponse>> getAll() {
+    public ApiResponse<List<PermissionResponse>> getAll() {
         ApiResponse<List<PermissionResponse>> apiResponse = new ApiResponse<>();
         List<PermissionResponse> permissionResponses = permissionService.getAll();
 
@@ -43,9 +45,6 @@ public class PermissionController {
     public ApiResponse<?> deletePermission(@PathVariable("name") String name) {
         permissionService.deleteById(name);
 
-        return ApiResponse.builder()
-                .code(1000)
-                .message("Permission deleted!")
-                .build();
+        return ApiResponse.builder().code(1000).message("Permission deleted!").build();
     }
 }

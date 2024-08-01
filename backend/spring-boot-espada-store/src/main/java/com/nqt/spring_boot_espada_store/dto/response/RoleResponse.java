@@ -1,11 +1,11 @@
 package com.nqt.spring_boot_espada_store.dto.response;
 
+import java.util.Set;
+
 import com.nqt.spring_boot_espada_store.entity.Permission;
-import com.nqt.spring_boot_espada_store.entity.Role;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @Builder

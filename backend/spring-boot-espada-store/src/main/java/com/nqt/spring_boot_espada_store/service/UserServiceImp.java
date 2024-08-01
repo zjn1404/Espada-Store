@@ -1,18 +1,8 @@
 package com.nqt.spring_boot_espada_store.service;
 
-import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
-import com.nqt.spring_boot_espada_store.entity.Role;
-import com.nqt.spring_boot_espada_store.entity.User;
-import com.nqt.spring_boot_espada_store.exception.ErrorCode;
-import com.nqt.spring_boot_espada_store.mapper.UserMapper;
-import com.nqt.spring_boot_espada_store.exception.AppException;
-import com.nqt.spring_boot_espada_store.repository.RoleRepository;
-import com.nqt.spring_boot_espada_store.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.util.HashSet;
+import java.util.List;
+
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -21,13 +11,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
+import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
+import com.nqt.spring_boot_espada_store.entity.Role;
+import com.nqt.spring_boot_espada_store.entity.User;
+import com.nqt.spring_boot_espada_store.exception.AppException;
+import com.nqt.spring_boot_espada_store.exception.ErrorCode;
+import com.nqt.spring_boot_espada_store.mapper.UserMapper;
+import com.nqt.spring_boot_espada_store.repository.RoleRepository;
+import com.nqt.spring_boot_espada_store.repository.UserRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService {
 
     UserRepository userRepository;
     RoleRepository roleRepository;
@@ -56,8 +58,7 @@ public class UserServiceImp implements UserService{
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return updateUser(request, user);
     }
@@ -65,7 +66,8 @@ public class UserServiceImp implements UserService{
     @Override
     public UserResponse updateUser(UserUpdateRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository
+                .findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return updateUser(request, user);
@@ -89,8 +91,7 @@ public class UserServiceImp implements UserService{
     @Override
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUserById(String id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);
     }
@@ -99,7 +100,8 @@ public class UserServiceImp implements UserService{
     public UserResponse getMyInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository
+                .findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);
@@ -108,9 +110,7 @@ public class UserServiceImp implements UserService{
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUsers() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toUserResponse)
-                .toList();
+        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
     @Override

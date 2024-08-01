@@ -1,13 +1,14 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Entity(name = "user")
 @Data
@@ -41,17 +42,12 @@ public class User {
     @Column(name = "enabled")
     boolean isEnabled;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.DETACH,
-            CascadeType.REFRESH
-    })
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_name")
-    )
+            inverseJoinColumns = @JoinColumn(name = "role_name"))
     Set<Role> roles;
-
 }

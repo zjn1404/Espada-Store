@@ -1,10 +1,11 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Entity(name = "role")
 @Data
@@ -21,15 +22,12 @@ public class Role {
     @Column(name = "description")
     String description;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE,
-            CascadeType.DETACH,
-            CascadeType.REFRESH
-    })
-    @JoinTable(name = "role_permission",
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinTable(
+            name = "role_permission",
             joinColumns = @JoinColumn(name = "role_name"),
-            inverseJoinColumns = @JoinColumn(name = "permission_name")
-    )
+            inverseJoinColumns = @JoinColumn(name = "permission_name"))
     Set<Permission> permissions;
 }
