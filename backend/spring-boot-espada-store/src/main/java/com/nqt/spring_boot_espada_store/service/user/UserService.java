@@ -1,9 +1,9 @@
-package com.nqt.spring_boot_espada_store.service;
+package com.nqt.spring_boot_espada_store.service.user;
 
 import java.util.List;
 
-import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 
 public interface UserService {

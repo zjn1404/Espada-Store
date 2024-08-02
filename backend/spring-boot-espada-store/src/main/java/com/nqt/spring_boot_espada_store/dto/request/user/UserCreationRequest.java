@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.dto.request;
+package com.nqt.spring_boot_espada_store.dto.request.user;
 
 import java.util.Set;
 

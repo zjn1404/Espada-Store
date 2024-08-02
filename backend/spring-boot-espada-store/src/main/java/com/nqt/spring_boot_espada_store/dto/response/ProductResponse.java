@@ -1,0 +1,39 @@
+package com.nqt.spring_boot_espada_store.dto.response;
+
+import com.nqt.spring_boot_espada_store.entity.Subtype;
+import jakarta.persistence.Lob;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.sql.Blob;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class ProductResponse {
+
+
+    String name;
+
+    double price;
+
+    String color;
+
+    String material;
+
+    String size;
+
+    String gender;
+
+    String description;
+
+    int stock;
+
+    @Lob
+    byte[] image;
+
+    Subtype subtype;
+
+}

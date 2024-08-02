@@ -5,8 +5,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 import com.nqt.spring_boot_espada_store.entity.User;
 

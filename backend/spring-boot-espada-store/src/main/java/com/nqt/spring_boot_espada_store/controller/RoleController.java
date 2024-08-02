@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.nqt.spring_boot_espada_store.dto.request.RoleRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.RoleResponse;
-import com.nqt.spring_boot_espada_store.service.RoleService;
+import com.nqt.spring_boot_espada_store.service.role.RoleService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -42,10 +42,10 @@ public class RoleController {
     }
 
     @DeleteMapping("/{name}")
-    public ApiResponse<?> delete(@PathVariable("name") String name) {
+    public ApiResponse<Void> delete(@PathVariable("name") String name) {
         roleService.deleteById(name);
 
-        ApiResponse<RoleResponse> apiResponse = new ApiResponse<>();
+        ApiResponse<Void> apiResponse = new ApiResponse<>();
         apiResponse.setMessage("Role deleted!");
 
         return apiResponse;

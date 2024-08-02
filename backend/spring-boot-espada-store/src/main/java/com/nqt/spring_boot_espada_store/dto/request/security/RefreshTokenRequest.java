@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.dto.request;
+package com.nqt.spring_boot_espada_store.dto.request.security;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LogoutRequest {
+public class RefreshTokenRequest {
     String token;
 }

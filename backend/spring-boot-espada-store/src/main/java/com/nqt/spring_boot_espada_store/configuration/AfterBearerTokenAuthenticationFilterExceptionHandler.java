@@ -15,7 +15,7 @@ import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 
 @Component
-public class AfterAuthorizationFilterExceptionHandler extends OncePerRequestFilter {
+public class AfterBearerTokenAuthenticationFilterExceptionHandler extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

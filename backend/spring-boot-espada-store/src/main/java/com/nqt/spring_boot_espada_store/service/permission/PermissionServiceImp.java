@@ -1,8 +1,7 @@
-package com.nqt.spring_boot_espada_store.service;
+package com.nqt.spring_boot_espada_store.service.permission;
 
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.nqt.spring_boot_espada_store.dto.request.PermissionRequest;
@@ -18,12 +17,11 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class PermissionService {
+public class PermissionServiceImp implements PermissionService {
 
     PermissionRepository permissionRepository;
     PermissionMapper permissionMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public PermissionResponse create(PermissionRequest request) {
         Permission permission = permissionMapper.toPermission(request);
 
@@ -32,14 +30,12 @@ public class PermissionService {
         return permissionMapper.toPermissionResponse(permission);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<PermissionResponse> getAll() {
         return permissionRepository.findAll().stream()
                 .map(permissionMapper::toPermissionResponse)
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(String name) {
         permissionRepository.deleteById(name);
     }

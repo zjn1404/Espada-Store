@@ -24,7 +24,7 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomJwtDecoder customJwtDecoder, AfterAuthorizationFilterExceptionHandler exceptionHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomJwtDecoder customJwtDecoder, AfterBearerTokenAuthenticationFilterExceptionHandler exceptionHandler) throws Exception {
 
         http.addFilterBefore(exceptionHandler, LogoutFilter.class);
 

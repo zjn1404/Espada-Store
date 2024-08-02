@@ -6,11 +6,11 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
-import com.nqt.spring_boot_espada_store.service.UserService;
+import com.nqt.spring_boot_espada_store.service.user.UserService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         UserResponse userResponse = userService.createUser(request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userResponse);
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUser(id, request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
 
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping
-    ApiResponse<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUser(request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
 
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    ApiResponse<UserResponse> getUser(@PathVariable("id") String id) {
+    public ApiResponse<UserResponse> getUser(@PathVariable("id") String id) {
         UserResponse userResponse = userService.getUserById(id);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
 
@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    ApiResponse<UserResponse> getMyInfo() {
+    public ApiResponse<UserResponse> getMyInfo() {
         UserResponse userResponse = userService.getMyInfo();
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
 
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @GetMapping
-    ApiResponse<List<UserResponse>> getAllUsers() {
+    public ApiResponse<List<UserResponse>> getAllUsers() {
         List<UserResponse> responses = userService.getUsers();
         ApiResponse<List<UserResponse>> apiResponse = new ApiResponse<>();
 
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    ApiResponse<Object> deleteUser(@PathVariable("id") String id) {
+    public ApiResponse<Object> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
 
         ApiResponse<Object> apiResponse = new ApiResponse<>();

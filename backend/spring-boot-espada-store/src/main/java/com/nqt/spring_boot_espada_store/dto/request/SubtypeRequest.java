@@ -1,13 +1,20 @@
 package com.nqt.spring_boot_espada_store.dto.request;
 
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class IntrospectRequest {
-    String token;
+public class SubtypeRequest {
+
+    @Size(min = 1, max = 50)
+    String name;
+
+    @Size(min = 1, max = 50)
+    String type;
+
 }

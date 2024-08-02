@@ -1,9 +1,9 @@
 package com.nqt.spring_boot_espada_store.configuration;
 
-import com.nqt.spring_boot_espada_store.dto.request.IntrospectRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.IntrospectRequest;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
-import com.nqt.spring_boot_espada_store.service.AuthenticationService;
+import com.nqt.spring_boot_espada_store.service.authentication.AuthenticationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

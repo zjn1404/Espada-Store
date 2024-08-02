@@ -20,6 +20,8 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, HttpStatus.UNAUTHORIZED, "Authentication Failed"),
     UNAUTHORIZED(1007, HttpStatus.FORBIDDEN, "Don't have permission"),
     INVALID_TOKEN(1008, HttpStatus.BAD_REQUEST, "Invalid Token"),
+    TYPE_NOT_EXISTED(1009, HttpStatus.BAD_REQUEST, "Type Not Existed"),
+    SUBTYPE_NOT_EXISTED(1010, HttpStatus.BAD_REQUEST, "SubType Not Existed"),
     ;
 
     final int code;

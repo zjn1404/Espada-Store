@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.service;
+package com.nqt.spring_boot_espada_store.service.user;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,10 +9,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import com.nqt.spring_boot_espada_store.dto.request.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 import com.nqt.spring_boot_espada_store.entity.Role;
 import com.nqt.spring_boot_espada_store.entity.User;
@@ -25,6 +24,7 @@ import com.nqt.spring_boot_espada_store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

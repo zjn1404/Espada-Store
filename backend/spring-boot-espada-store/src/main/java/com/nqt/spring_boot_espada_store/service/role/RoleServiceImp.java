@@ -1,9 +1,8 @@
-package com.nqt.spring_boot_espada_store.service;
+package com.nqt.spring_boot_espada_store.service.role;
 
 import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.nqt.spring_boot_espada_store.dto.request.RoleRequest;
@@ -21,13 +20,12 @@ import lombok.experimental.FieldDefaults;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class RoleService {
+public class RoleServiceImp implements RoleService {
 
     RoleRepository roleRepository;
     PermissionRepository permissionRepository;
     RoleMapper roleMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public RoleResponse create(RoleRequest request) {
         Role role = roleMapper.toRole(request);
         if (request.getPermissions() != null) {
@@ -39,12 +37,10 @@ public class RoleService {
         return roleMapper.toRoleResponse(roleRepository.save(role));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<RoleResponse> getAll() {
         return roleRepository.findAll().stream().map(roleMapper::toRoleResponse).toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public void deleteById(String name) {
         roleRepository.deleteById(name);
     }

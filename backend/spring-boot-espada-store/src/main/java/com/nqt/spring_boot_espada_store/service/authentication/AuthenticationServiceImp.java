@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.service;
+package com.nqt.spring_boot_espada_store.service.authentication;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-import com.nqt.spring_boot_espada_store.dto.request.LogoutRequest;
-import com.nqt.spring_boot_espada_store.dto.request.RefreshTokenRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.LogoutRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.RefreshTokenRequest;
 import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
 import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.nqt.spring_boot_espada_store.dto.request.AuthenticationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.IntrospectRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.AuthenticationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.IntrospectRequest;
 import com.nqt.spring_boot_espada_store.dto.response.AuthenticationResponse;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;
 import com.nqt.spring_boot_espada_store.entity.User;
@@ -36,11 +36,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
-@Slf4j
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationService {
+public class AuthenticationServiceImp implements AuthenticationService {
 
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
