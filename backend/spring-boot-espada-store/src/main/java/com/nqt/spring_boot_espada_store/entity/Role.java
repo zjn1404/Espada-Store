@@ -17,6 +17,7 @@ public class Role {
 
     @Id
     @Column(name = "role_name")
+    @Setter(AccessLevel.NONE)
     String name;
 
     @Column(name = "description")

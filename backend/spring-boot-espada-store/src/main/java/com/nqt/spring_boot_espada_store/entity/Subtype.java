@@ -15,6 +15,7 @@ public class Subtype {
 
     @Id
     @Column(name = "subtype_name", nullable = false, unique = true)
+    @Setter(AccessLevel.NONE)
     String name;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

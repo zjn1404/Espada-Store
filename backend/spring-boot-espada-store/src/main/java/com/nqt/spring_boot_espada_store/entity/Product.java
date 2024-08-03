@@ -44,9 +44,11 @@ public class Product {
     @Lob
     byte[] image;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {
+    @OneToOne(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH
     })
+    @JoinColumn(name = "subtype")
     Subtype subtype;
+
 }

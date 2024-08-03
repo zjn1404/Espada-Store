@@ -19,9 +19,11 @@ public class InvalidatedToken {
 
     @Id
     @Column(name = "ac_id")
+    @Setter(AccessLevel.NONE)
     String acId;
 
     @Column(name = "rf_id")
+    @Setter(AccessLevel.NONE)
     String rfId;
 
     @Column(name = "expiry_time")

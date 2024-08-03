@@ -17,12 +17,6 @@ public class Type {
 
     @Id
     @Column(name = "type_name")
+    @Setter(AccessLevel.NONE)
     String name;
-
-    @Override
-    public String toString() {
-        return "Type{" +
-                "name='" + name + '\'' +
-                '}';
-    }
 }

@@ -17,6 +17,7 @@ public class Permission {
 
     @Id
     @Column(name = "permission_name")
+    @Setter(AccessLevel.NONE)
     String name;
 
     @Column(name = "description")

@@ -17,7 +17,7 @@ public interface ProductService {
 
     List<ProductResponse> getAllProducts();
 
-    List<ProductResponse> getProductsByType(TypeRequest type);
+    List<ProductResponse> getProductsByType(String type);
 
     void deleteProduct(String id);
 }

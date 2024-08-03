@@ -28,8 +28,9 @@ public class ApplicationInitConfig {
     public ApplicationRunner applicationRunner() {
         return args -> {
             if (!roleRepository.existsById("ADMIN")) {
-                Role adminRole = new Role();
-                adminRole.setName("ADMIN");
+                Role adminRole = Role.builder()
+                        .name("ADMIN")
+                        .build();
                 roleRepository.save(adminRole);
             }
         };

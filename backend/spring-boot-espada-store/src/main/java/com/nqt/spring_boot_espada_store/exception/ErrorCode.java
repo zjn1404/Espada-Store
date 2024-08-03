@@ -22,6 +22,7 @@ public enum ErrorCode {
     INVALID_TOKEN(1008, HttpStatus.BAD_REQUEST, "Invalid Token"),
     TYPE_NOT_EXISTED(1009, HttpStatus.BAD_REQUEST, "Type Not Existed"),
     SUBTYPE_NOT_EXISTED(1010, HttpStatus.BAD_REQUEST, "SubType Not Existed"),
+    PRODUCT_NOT_EXISTED(1011, HttpStatus.BAD_REQUEST, "Product Not Existed"),
     ;
 
     final int code;
