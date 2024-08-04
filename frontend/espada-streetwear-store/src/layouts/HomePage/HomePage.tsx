@@ -1,6 +1,6 @@
 import React from "react";
-import { DisplayProduct } from "./Components/DisplayProducts";
 import { ExploreBestSeller } from "./Components/ExploreBestSeller";
+import { BestSeller } from "../ProductsPage/BestSeller";
 
 export const HomePage: React.FC<{
   displayProductRef: React.RefObject<HTMLDivElement>;
@@ -10,7 +10,7 @@ export const HomePage: React.FC<{
     <>
       <ExploreBestSeller handleFindOutClick={props.handleFindOutClick} />
       <div ref={props.displayProductRef}>
-        <DisplayProduct />
+        <BestSeller />
       </div>
     </>
   );

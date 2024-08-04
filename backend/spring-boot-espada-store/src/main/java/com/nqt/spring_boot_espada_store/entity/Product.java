@@ -42,7 +42,7 @@ public class Product {
 
     @Column(name = "img")
     @Lob
-    byte[] image;
+    String image;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {
             CascadeType.PERSIST, CascadeType.MERGE,

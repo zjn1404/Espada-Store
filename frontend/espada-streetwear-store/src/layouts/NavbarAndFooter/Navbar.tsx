@@ -1,7 +1,12 @@
-import userLogo from '../../img/logo/user-logo.jpeg';
-import logo from '../../img/logo/espada.png';
+import React, { useState } from "react";
+import userLogo from "../../img/logo/user-logo.jpeg";
+import logo from "../../img/logo/espada.png";
+import { NavLink } from "react-router-dom";
 
 export const Navbar = () => {
+  // State to manage user login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <nav
       className="navbar navbar-expand-lg navbar-light"
@@ -27,7 +32,6 @@ export const Navbar = () => {
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
-                href="#"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -36,31 +40,30 @@ export const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/tee">
                     T-shirts
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/shirt">
                     Shirts
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/jacket">
                     Jackets
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/hoodie">
                     Hoodies
-                  </a>
+                  </NavLink>
                 </li>
               </ul>
             </li>
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
-                href="#"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -69,26 +72,25 @@ export const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/pants">
                     Pants
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/shorts">
                     Shorts
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/skirt">
                     Skirts
-                  </a>
+                  </NavLink>
                 </li>
               </ul>
             </li>
             <li className="nav-item dropdown">
               <a
                 className="nav-link dropdown-toggle"
-                href="#"
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -97,44 +99,45 @@ export const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/bag">
                     Bags
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <NavLink className="dropdown-item" to="/product/headwear">
                     Headwears
-                  </a>
+                  </NavLink>
                 </li>
               </ul>
             </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Join us
-              </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <a className="dropdown-item text-body-secondary" href="#">
-                    Sign in
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item text-body-secondary" href="#">
-                    Sign up
-                  </a>
-                </li>
-              </ul>
-            </li>
+            {!isLoggedIn && (
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Join us
+                </a>
+                <ul className="dropdown-menu">
+                  <li>
+                    <NavLink className="dropdown-item text-body-secondary" to="/sign-in">
+                      Sign in
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item text-body-secondary" to="/sign-up">
+                      Sign up
+                    </NavLink>
+                  </li>
+                </ul>
+              </li>
+            )}
           </ul>
-          <a className="navbar-brand p-2 flex-fill" href="#">
+          <NavLink className="navbar-brand p-2 flex-fill" to="/home">
             <img src={logo} alt="Espada-logo" height="50" />
-          </a>
+          </NavLink>
           <form className="d-flex p-2 flex-fill" role="search">
             <input
               className="form-control me-2 p-2"
@@ -146,46 +149,47 @@ export const Navbar = () => {
               Search
             </button>
           </form>
-        {/* TODO: Only display when user has logged in d */}
-          <div className="nav-item dropdown ms-3 dropstart">
-            <a
-              className="nav-link dropdown-toggle text-body-secondary"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <img
-                src={userLogo}
-                style={{ borderRadius: "50%", height: 50 }}
-                alt="user-logo"
-              />
-            </a>
-            <ul className="dropdown-menu">
-              <li>
-                <a className="dropdown-item text-body-secondary" href="#">
-                  Cart
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item text-body-secondary" href="#">
-                  Change password
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item text-body-secondary" href="#">
-                  Update information
-                </a>
-              </li>
-              <li>
-                <a className="dropdown-item text-body-secondary" href="#">
-                  Sign out
-                </a>
-              </li>
-            </ul>
-          </div>
+          {/* Conditionally render user logo and dropdown */}
+          {isLoggedIn && (
+            <div className="nav-item dropdown ms-3 dropstart">
+              <a
+                className="nav-link dropdown-toggle text-body-secondary"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src={userLogo}
+                  style={{ borderRadius: "50%", height: 50 }}
+                  alt="user-logo"
+                />
+              </a>
+              <ul className="dropdown-menu">
+                <li>
+                  <NavLink className="dropdown-item text-body-secondary" to="/cart">
+                    Cart
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink className="dropdown-item text-body-secondary" to="/change-password">
+                    Change password
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink className="dropdown-item text-body-secondary" to="/update-info">
+                    Update information
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink className="dropdown-item text-body-secondary" to="/sign-out">
+                    Sign out
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </nav>
   );
-}
+};

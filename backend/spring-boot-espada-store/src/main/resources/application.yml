@@ -17,3 +17,6 @@ jwt:
   refreshSignerKey: "7+78pvfH7Pp4WK8py2tecwSfH+Cvt56WKuWNEDOmqsEaiDwjWh2wBI56+gTMMy9S"
   valid-duration: 3600 # in second
   refreshable-duration: 360000 # in second
+
+page-size-default:
+  product: 12

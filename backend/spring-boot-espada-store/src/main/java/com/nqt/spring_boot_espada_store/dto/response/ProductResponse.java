@@ -14,6 +14,7 @@ import java.sql.Blob;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductResponse {
 
+    String id;
 
     String name;
 
@@ -32,7 +33,7 @@ public class ProductResponse {
     int stock;
 
     @Lob
-    byte[] image;
+    String image;
 
     Subtype subtype;
 

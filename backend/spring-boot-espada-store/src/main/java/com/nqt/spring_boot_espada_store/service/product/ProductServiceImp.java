@@ -1,6 +1,5 @@
 package com.nqt.spring_boot_espada_store.service.product;
 
-import com.nqt.spring_boot_espada_store.dto.request.TypeRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
@@ -10,7 +9,6 @@ import com.nqt.spring_boot_espada_store.entity.Type;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.ProductMapper;
-import com.nqt.spring_boot_espada_store.mapper.TypeMapper;
 import com.nqt.spring_boot_espada_store.repository.ProductRepository;
 import com.nqt.spring_boot_espada_store.repository.SubtypeRepository;
 import com.nqt.spring_boot_espada_store.repository.TypeRepository;
@@ -19,11 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,7 +53,8 @@ public class ProductServiceImp implements ProductService {
                     .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
 
             Product product = productMapper.toProduct(request);
-            product.setImage(img);
+            String base64Img = Base64.getEncoder().encodeToString(img);
+            product.setImage(base64Img);
             product.setSubtype(subtype);
 
             String id = createId(product.getName(), product.getSubtype().getName(), product.getGender());
@@ -93,7 +94,9 @@ public class ProductServiceImp implements ProductService {
             Product product = productRepository.findById(id)
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
             productMapper.updateProduct(product, request);
-            product.setImage(img);
+
+            String base64Img = Base64.getEncoder().encodeToString(img);
+            product.setImage(base64Img);
 
             productRepository.saveAndFlush(product);
 
@@ -113,10 +116,8 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
-                .map(productMapper::toProductResponse)
-                .toList();
+    public Page<ProductResponse> getAllProducts(PageRequest request) {
+        return productRepository.findAll(request).map(productMapper::toProductResponse);
     }
 
     @Override
@@ -127,6 +128,29 @@ public class ProductServiceImp implements ProductService {
         return productRepository.findAllByType(foundType).stream()
                 .map(productMapper::toProductResponse)
                 .toList();
+    }
+
+    @Override
+    public List<ProductResponse> getProductsBySubtype(String subtype) {
+        Subtype foundSubtype = subtypeRepository.findById(subtype)
+                .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
+
+        return productRepository.findAllBySubtype(foundSubtype).stream()
+                .map(productMapper::toProductResponse)
+                .toList();
+    }
+
+    @Override
+    public Page<ProductResponse> getProductsBySubtype(String subtype, PageRequest request) {
+        Subtype foundSubtype = subtypeRepository.findById(subtype)
+                .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
+
+        return productRepository.findAllBySubtype(foundSubtype, request).map(productMapper::toProductResponse);
+    }
+
+    @Override
+    public Page<ProductResponse> getProductsBySearch(String input, PageRequest request) {
+        return productRepository.findProductsByNameContaining(input, request).map(productMapper::toProductResponse);
     }
 
     @Override

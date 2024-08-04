@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.multipart.MultipartFile;
 
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -14,10 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductUpdateRequest {
 
     @Min(0)
-    double price;
+    Double price;
 
     @Min(0)
-    int stock;
+    Integer stock;
 
     @Lob
     MultipartFile image;

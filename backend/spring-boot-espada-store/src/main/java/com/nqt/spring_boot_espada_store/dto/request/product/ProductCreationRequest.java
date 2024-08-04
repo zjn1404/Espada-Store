@@ -34,20 +34,4 @@ public class ProductCreationRequest {
     MultipartFile image;
 
     String subtype;
-
-    @Override
-    public String toString() {
-        return "ProductCreationRequest{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", color='" + color + '\'' +
-                ", material='" + material + '\'' +
-                ", size='" + size + '\'' +
-                ", gender='" + gender + '\'' +
-                ", description='" + description + '\'' +
-                ", stock=" + stock +
-                ", image=" + image +
-                ", subtype='" + subtype + '\'' +
-                '}';
-    }
 }

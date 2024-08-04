@@ -1,9 +1,10 @@
 package com.nqt.spring_boot_espada_store.service.product;
 
-import com.nqt.spring_boot_espada_store.dto.request.TypeRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -15,9 +16,15 @@ public interface ProductService {
 
     ProductResponse getProduct(String id);
 
-    List<ProductResponse> getAllProducts();
+    Page<ProductResponse> getAllProducts(PageRequest request);
 
     List<ProductResponse> getProductsByType(String type);
+
+    List<ProductResponse> getProductsBySubtype(String subtype);
+
+    Page<ProductResponse> getProductsBySubtype(String subtype, PageRequest request);
+
+    Page<ProductResponse> getProductsBySearch(String input, PageRequest request);
 
     void deleteProduct(String id);
 }
