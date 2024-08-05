@@ -35,6 +35,10 @@ public class SubtypeServiceImp implements SubtypeService{
         Type type = typeRepository.findById(request.getType()).
                 orElseThrow(() -> new AppException(ErrorCode.TYPE_NOT_EXISTED));
 
+        if (subtypeRepository.existsById(request.getName())) {
+            throw new AppException(ErrorCode.SUB_TYPE_EXISTED);
+        }
+
         Subtype subtype = subtypeMapper.toSubType(request);
         subtype.setType(type);
 

@@ -24,6 +24,11 @@ public class TypeServiceImp implements TypeService{
 
     @Override
     public TypeResponse createType(TypeRequest request) {
+
+        if (typeRepository.existsById(request.getName())) {
+            throw new AppException(ErrorCode.TYPE_EXISTED);
+        }
+
         Type type = typeMapper.toType(request);
 
         typeRepository.save(type);

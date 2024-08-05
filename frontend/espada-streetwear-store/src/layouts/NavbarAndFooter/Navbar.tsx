@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import userLogo from "../../img/logo/user-logo.jpeg";
 import logo from "../../img/logo/espada.png";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 export const Navbar = () => {
   // State to manage user login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const history = useHistory();
+
+  const handleSearchSubmit = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    history.push(`/product/search?input=${searchInput}`);
+    setSearchInput("");
+  };
 
   return (
     <nav
@@ -122,12 +130,18 @@ export const Navbar = () => {
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <NavLink className="dropdown-item text-body-secondary" to="/sign-in">
+                    <NavLink
+                      className="dropdown-item text-body-secondary"
+                      to="/sign-in"
+                    >
                       Sign in
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink className="dropdown-item text-body-secondary" to="/sign-up">
+                    <NavLink
+                      className="dropdown-item text-body-secondary"
+                      to="/sign-up"
+                    >
                       Sign up
                     </NavLink>
                   </li>
@@ -138,12 +152,18 @@ export const Navbar = () => {
           <NavLink className="navbar-brand p-2 flex-fill" to="/home">
             <img src={logo} alt="Espada-logo" height="50" />
           </NavLink>
-          <form className="d-flex p-2 flex-fill" role="search">
+          <form
+            className="d-flex p-2 flex-fill"
+            role="search"
+            onSubmit={handleSearchSubmit}
+          >
             <input
               className="form-control me-2 p-2"
               type="search"
               placeholder="Search"
               aria-label="Search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
             <button className="btn btn-outline-secondary" type="submit">
               Search
@@ -166,22 +186,34 @@ export const Navbar = () => {
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <NavLink className="dropdown-item text-body-secondary" to="/cart">
+                  <NavLink
+                    className="dropdown-item text-body-secondary"
+                    to="/cart"
+                  >
                     Cart
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item text-body-secondary" to="/change-password">
+                  <NavLink
+                    className="dropdown-item text-body-secondary"
+                    to="/change-password"
+                  >
                     Change password
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item text-body-secondary" to="/update-info">
+                  <NavLink
+                    className="dropdown-item text-body-secondary"
+                    to="/update-info"
+                  >
                     Update information
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink className="dropdown-item text-body-secondary" to="/sign-out">
+                  <NavLink
+                    className="dropdown-item text-body-secondary"
+                    to="/sign-out"
+                  >
                     Sign out
                   </NavLink>
                 </li>

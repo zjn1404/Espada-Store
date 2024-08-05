@@ -11,7 +11,7 @@ export const ReturnDisplayProduct: React.FC<{
   };
 
   return (
-    <div className="card p-2 flex-fill product" style={{ width: "18rem" }}>
+    <div className="card p-2 product mt-3 me-3" style={{ width: "18rem" }}>
       <a href="#">
         {props.product.image ? (
           <img

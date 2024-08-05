@@ -15,6 +15,8 @@ import java.util.Set;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
+    boolean existsByName(String name);
+
     @Query("SELECT p FROM product p JOIN p.subtype st WHERE st.type = :type")
     Set<Product> findAllByType(@Param("type") Type type);
 

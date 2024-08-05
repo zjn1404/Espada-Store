@@ -3,6 +3,7 @@ import ProductModel from "../../model/ProductModel";
 import { ReturnDisplayProduct } from "./ReturnDisplayedProduct";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { Pagination } from "../Utils/Pagination";
+import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 
 export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
   const [products, setProducts] = useState<ProductModel[]>([]);
@@ -15,8 +16,16 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      let url;
+
+      if (baseUrl.search("search") !== -1) {
+        url = `${baseUrl}&page=${currentPage - 1}&size=${productsPerPage}`;
+      } else {
+        url = `${baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
+      }
+
       const response = await fetch(
-        `${baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
+        url
       );
 
       if (!response.ok) {
@@ -63,8 +72,26 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
 
   if (httpError) {
     return (
-      <section>
-        <p>{httpError}</p>
+      <section className="d-flex justify-content-center align-items-center" style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <img src={failToFetchImg} alt="Failed to fetch" style={{width: '100%', 
+          height: '100%'}} />
+        <div style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: 'white', 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          fontSize: '4rem', 
+          fontWeight: 'bold', 
+          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
+        }}>
+          FAIL TO LOAD PRODUCT
+        </div>
       </section>
     );
   }
@@ -73,7 +100,7 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
 
   return (
     <div className="container mt-5">
-      <div className="row">
+      <div className="row justify-content-center">
         {products.map((product) => (
           <ReturnDisplayProduct
             product={product}

@@ -27,7 +27,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**"
+            "/product/**", "/type/**", "/subtype/**"
     };
 
     @Bean

@@ -42,6 +42,11 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
+
+        if (productRepository.existsByName(request.getName())) {
+            throw new AppException(ErrorCode.PRODUCT_EXISTED);
+        }
+
         try {
 
             byte[] img = null;
