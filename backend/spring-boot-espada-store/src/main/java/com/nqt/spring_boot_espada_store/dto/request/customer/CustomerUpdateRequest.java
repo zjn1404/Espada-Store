@@ -1,20 +1,19 @@
-package com.nqt.spring_boot_espada_store.dto.request.user;
-
-import java.util.Set;
+package com.nqt.spring_boot_espada_store.dto.request.customer;
 
 import jakarta.validation.constraints.Size;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+import java.util.Date;
 
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CustomerUpdateRequest {
+
+    // update user
     @Size(min = 6, message = "PASSWORD_INVALID")
     String password;
 
@@ -24,5 +23,11 @@ public class UserUpdateRequest {
     String lastName;
     // TODO: Consider to delete
     boolean enabled;
-    Set<String> roles;
+    // end update user
+
+    String gender;
+    String address;
+    String deliveryAddress;
+    Date dob;
+    boolean registerToGetMail;
 }

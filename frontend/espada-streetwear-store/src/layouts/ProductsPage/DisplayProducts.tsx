@@ -5,7 +5,10 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { Pagination } from "../Utils/Pagination";
 import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 
-export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
+export const DisplayProduct: React.FC<{ 
+  baseUrl: string;
+  notDisplayedProduct ?: string
+}> = (props) => {
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState<string | null>(null);
@@ -18,10 +21,10 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
     const fetchProducts = async () => {
       let url;
 
-      if (baseUrl.search("search") !== -1) {
-        url = `${baseUrl}&page=${currentPage - 1}&size=${productsPerPage}`;
+      if (props.baseUrl.search("search") !== -1) {
+        url = `${props.baseUrl}&page=${currentPage - 1}&size=${productsPerPage}`;
       } else {
-        url = `${baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
+        url = `${props.baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
       }
 
       const response = await fetch(
@@ -38,8 +41,11 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
       setTotalAmountOfProducts(responseJson.result.page.totalElements);
       setTotalPages(responseJson.result.page.totalPages);
 
-      const loadedProducts: ProductModel[] = responseData.map(
+      const loadedProducts: ProductModel[] = responseData
+      .filter((product: any) => product.id !== props.notDisplayedProduct)
+      .map(
         (product: any) => ({
+          
           id: product.id,
           name: product.name,
           price: product.price,
@@ -64,7 +70,7 @@ export const DisplayProduct: React.FC<{ baseUrl: string }> = ({ baseUrl }) => {
     });
 
     window.scrollTo(0, 0);
-  }, [currentPage, baseUrl, productsPerPage]);
+  }, [currentPage, props.baseUrl, productsPerPage]);
 
   if (isLoading) {
     return <SpinnerLoading />;

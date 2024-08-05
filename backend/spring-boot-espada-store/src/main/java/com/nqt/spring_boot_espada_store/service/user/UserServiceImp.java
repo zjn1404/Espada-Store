@@ -3,6 +3,7 @@ package com.nqt.spring_boot_espada_store.service.user;
 import java.util.HashSet;
 import java.util.List;
 
+import com.nqt.spring_boot_espada_store.repository.CustomerRepository;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImp implements UserService {
 
     UserRepository userRepository;
+    CustomerRepository customerRepository;
     RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
@@ -47,7 +49,6 @@ public class UserServiceImp implements UserService {
         List<Role> roles = roleRepository.findAllById(request.getRoles());
         user.setRoles(new HashSet<>(roles));
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String id = String.format("%s%s", user.getUsername(), user.getPhoneNumber());
         user.setId(id);
@@ -116,6 +117,9 @@ public class UserServiceImp implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String id) {
+        User deletedUser = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        customerRepository.deleteCustomerByUser(deletedUser);
+
         userRepository.deleteById(id);
     }
 }

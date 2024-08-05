@@ -10,6 +10,8 @@ import lombok.experimental.FieldDefaults;
 @Entity(name = "user")
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -37,6 +39,7 @@ public class User {
     @Column(name = "last_name")
     String lastName;
 
+    // TODO: Consider to delete
     @Column(name = "enabled")
     boolean isEnabled;
 

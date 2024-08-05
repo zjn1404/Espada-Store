@@ -1,6 +1,7 @@
 import React from "react";
 import ProductModel from "../../model/ProductModel";
 import defaultImg from "../../img/logo/espada.png";
+import { NavLink } from "react-router-dom";
 
 export const ReturnDisplayProduct: React.FC<{
   product: ProductModel;
@@ -12,7 +13,7 @@ export const ReturnDisplayProduct: React.FC<{
 
   return (
     <div className="card p-2 product mt-3 me-3" style={{ width: "18rem" }}>
-      <a href="#">
+      <NavLink to={`/checkout/${props.product.id}`}>
         {props.product.image ? (
           <img
             src={getImageSrc(props.product.image)}
@@ -29,18 +30,18 @@ export const ReturnDisplayProduct: React.FC<{
             alt={props.alt}
           />
         )}
-      </a>
+      </NavLink>
       <div className="card-body">
-        <a href="#" style={{ color: "black", textDecoration: "none" }}>
+        <NavLink to={`/checkout/${props.product.id}`} style={{ color: "black", textDecoration: "none" }}>
           <h5 className="card-title text-body-secondary">
             {props.product.name}
           </h5>
-        </a>
+        </NavLink>
         <p
           className="card-text text-body-secondary"
           style={{ fontSize: "20px" }}
         >
-          {props.product.price}
+          {props.product.price}$
         </p>
       </div>
     </div>

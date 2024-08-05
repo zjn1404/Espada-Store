@@ -17,6 +17,8 @@ import { BagsPage } from "./layouts/ProductsPage/BagsPage";
 import { JacketsPage } from "./layouts/ProductsPage/JacketsPage";
 import { SkirtsPage } from "./layouts/ProductsPage/SkirtsPage";
 import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
+import { ShirtsPage } from "./layouts/ProductsPage/ShirtsPage";
+import { ProductCheckoutPage } from "./layouts/ProductCheckoutPage/ProductCheckoutPage";
 
 
 function App() {
@@ -45,7 +47,9 @@ function App() {
               />
             )}
           />
+          {/* PRODUCT */}
           <Route path="/product/tee" component={TeesPage} />
+          <Route path="/product/shirt" component={ShirtsPage} />
           <Route path="/product/jacket" component={JacketsPage} />
           <Route path="/product/hoodie" component={HoodiesPage} />
           <Route path="/product/pants" component={PantsPage} />
@@ -53,6 +57,8 @@ function App() {
           <Route path="/product/skirt" component={SkirtsPage} />
           <Route path="/product/bag" component={BagsPage} />
           <Route path="/product/search" component={SearchPage} />
+          {/* END PRODUCT */}
+          <Route path="/checkout/:productId" component={ProductCheckoutPage} />
         </Switch>
         <Footer />
       </div>

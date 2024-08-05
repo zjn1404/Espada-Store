@@ -26,6 +26,7 @@ public enum ErrorCode {
     TYPE_EXISTED(1012, HttpStatus.BAD_REQUEST, "Type Existed"),
     SUB_TYPE_EXISTED(1013, HttpStatus.BAD_REQUEST, "Sub Type Existed"),
     PRODUCT_EXISTED(1014, HttpStatus.BAD_REQUEST, "Product Existed"),
+    ROLE_NOT_EXISTED(1015, HttpStatus.BAD_REQUEST, "Role Not Existed"),
     ;
 
     final int code;
