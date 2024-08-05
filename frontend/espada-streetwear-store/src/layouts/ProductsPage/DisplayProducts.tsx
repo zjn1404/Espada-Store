@@ -70,7 +70,7 @@ export const DisplayProduct: React.FC<{
     });
 
     window.scrollTo(0, 0);
-  }, [currentPage, props.baseUrl, productsPerPage]);
+  }, [currentPage, props.baseUrl, productsPerPage, props.notDisplayedProduct]);
 
   if (isLoading) {
     return <SpinnerLoading />;
