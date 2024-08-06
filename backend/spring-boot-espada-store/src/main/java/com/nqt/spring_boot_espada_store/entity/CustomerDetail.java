@@ -42,7 +42,7 @@ public class CustomerDetail {
                     CascadeType.REFRESH
             }
     )
-    @MapsId("customer_id")
+    @MapsId("customerId")
     @JoinColumn(name = "customer_id")
     User user;
 }
