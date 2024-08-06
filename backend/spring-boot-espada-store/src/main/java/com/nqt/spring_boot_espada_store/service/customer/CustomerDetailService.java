@@ -1,15 +1,15 @@
 package com.nqt.spring_boot_espada_store.service.customer;
 
-import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.response.CustomerResponse;
+import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.response.CustomerDetailResponse;
 
-public interface CustomerService {
+public interface CustomerDetailService {
 
-    CustomerResponse create(CustomerCreationRequest request);
+    CustomerDetailResponse create(CustomerDetailCreationRequest request);
 
-    CustomerResponse getByUser();
+    CustomerDetailResponse getCustomerDetail();
 
-    CustomerResponse update(CustomerUpdateRequest request);
+    CustomerDetailResponse update(CustomerDetailUpdateRequest request);
 
 }

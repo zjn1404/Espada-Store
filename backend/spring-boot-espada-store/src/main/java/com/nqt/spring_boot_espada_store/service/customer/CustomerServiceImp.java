@@ -1,18 +1,15 @@
 package com.nqt.spring_boot_espada_store.service.customer;
 
-import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.response.CustomerResponse;
-import com.nqt.spring_boot_espada_store.entity.Customer;
+import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.response.CustomerDetailResponse;
+import com.nqt.spring_boot_espada_store.entity.CustomerDetail;
 import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
-import com.nqt.spring_boot_espada_store.mapper.CustomerMapper;
+import com.nqt.spring_boot_espada_store.mapper.CustomerDetailMapper;
 import com.nqt.spring_boot_espada_store.repository.CustomerRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
-import com.nqt.spring_boot_espada_store.service.user.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,78 +17,54 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CustomerServiceImp implements CustomerService{
+public class CustomerServiceImp implements CustomerDetailService{
 
     CustomerRepository customerRepository;
     UserRepository userRepository;
 
-    UserService userService;
-
-    CustomerMapper customerMapper;
+    CustomerDetailMapper customerMapper;
 
     @Override
-    public CustomerResponse create(CustomerCreationRequest request) {
-        UserCreationRequest customerCreationRequest = customerMapper.toUserCreationRequest(request);
-        userService.createUser(customerCreationRequest);
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        Customer customer = customerMapper.toCustomer(request);
-        customer.setUser(user);
-
-        String id = String.format("%s-info", user.getId());
-        customer.setCustomerId(id);
-
-        String userId = String.format("%s%s", user.getUsername(), user.getPhoneNumber());
-        user.setId(userId);
-
-        userRepository.save(user);
-
-        return customerMapper.toCustomerResponse(customerRepository.save(customer));
-    }
-
-    @Override
-    public CustomerResponse getByUser() {
-
-        User user = findUser();
-
-        Customer customer = customerRepository.findByUser(user)
-                .orElse(null);
-
-        return Objects.isNull(customer) ? new CustomerResponse()
-                : customerMapper.toCustomerResponse(customer);
-    }
-
-    @Override
-    public CustomerResponse update(CustomerUpdateRequest request) {
-        User user = findUser();
-
-        Customer customer = customerRepository.findByUser(user)
-                .orElse(null);
-
-        if (Objects.isNull(customer)) {
-            return new CustomerResponse();
+    public CustomerDetailResponse create(CustomerDetailCreationRequest request) {
+        User user = getUser();
+        if (customerRepository.existsById(user.getId())) {
+            throw new AppException(ErrorCode.CUSTOMER_DETAIL_EXISTED);
         }
+        CustomerDetail customerDetail = customerMapper.toCustomerDetail(request);
+        customerDetail.setCustomerId(user.getId());
+        customerRepository.save(customerDetail);
 
-        UserUpdateRequest updateRequest = customerMapper.toUserUpdateRequest(request);
-
-        userService.updateUser(updateRequest);
-
-        customerMapper.updateCustomer(customer, request);
-        customer.setUser(user);
-
-        return customerMapper.toCustomerResponse(customerRepository.save(customer));
+        return customerMapper.toCustomerDetailResponse(customerDetail);
     }
 
-    private User findUser() {
+    @Override
+    public CustomerDetailResponse getCustomerDetail() {
+        User user = getUser();
+
+        return customerMapper.toCustomerDetailResponse(user.getCustomerDetail());
+    }
+
+    @Override
+    public CustomerDetailResponse update(CustomerDetailUpdateRequest request) {
+        User user = getUser();
+        CustomerDetail customerDetail = customerRepository.findById(user.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_DETAIL_NOT_EXISTED));
+
+        customerMapper.updateCustomerDetail(customerDetail, request);
+        customerRepository.saveAndFlush(customerDetail);
+
+        return customerMapper.toCustomerDetailResponse(customerDetail);
+    }
+
+    private User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return userRepository.findByUsername(authentication.getName())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        String username = authentication.getName();
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
     }
 }

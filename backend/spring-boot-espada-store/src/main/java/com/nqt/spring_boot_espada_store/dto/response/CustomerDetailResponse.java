@@ -11,9 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CustomerResponse {
-
-    User user;
+public class CustomerDetailResponse {
 
     String gender;
 

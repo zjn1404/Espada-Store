@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
 
-@Entity(name = "customer")
+@Entity(name = "customer_detail")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,7 +34,15 @@ public class CustomerDetail {
     boolean registerToGetMail;
 
 
-    @MapsId("id")
+    @OneToOne(
+            cascade = {
+                    CascadeType.DETACH,
+                    CascadeType.MERGE,
+                    CascadeType.PERSIST,
+                    CascadeType.REFRESH
+            }
+    )
+    @MapsId("customer_id")
     @JoinColumn(name = "customer_id")
     User user;
 }

@@ -11,7 +11,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -39,10 +38,6 @@ public class User {
     @Column(name = "last_name")
     String lastName;
 
-    // TODO: Consider to delete
-    @Column(name = "enabled")
-    boolean isEnabled;
-
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
@@ -51,4 +46,9 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_name"))
     Set<Role> roles;
+
+    @OneToOne( mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    CustomerDetail customerDetail;
+
 }
