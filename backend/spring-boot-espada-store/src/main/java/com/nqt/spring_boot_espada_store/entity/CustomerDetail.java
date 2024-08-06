@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Customer {
+public class CustomerDetail {
 
     @Id
     @Column(name = "customer_id")
@@ -34,10 +34,7 @@ public class Customer {
     boolean registerToGetMail;
 
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
-    @JoinColumn(name = "user_id")
+    @MapsId("id")
+    @JoinColumn(name = "customer_id")
     User user;
 }
