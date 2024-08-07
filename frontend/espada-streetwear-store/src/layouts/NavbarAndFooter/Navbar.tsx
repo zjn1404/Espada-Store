@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import userLogo from "../../img/logo/user-logo.jpeg";
 import logo from "../../img/logo/espada.png";
 import { NavLink, useHistory } from "react-router-dom";
+import axios from "axios";
 
 export const Navbar = () => {
   // State to manage user login status
@@ -14,6 +15,24 @@ export const Navbar = () => {
     history.push(`/product/search?input=${searchInput}`);
     setSearchInput("");
   };
+
+  const handleSignOut = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+
+    axios.post("http://localhost:8080/api/auth/logout", {
+      token: accessToken,
+    });
+
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
+    history.push("/home");
+  };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    setIsLoggedIn(!!accessToken);
+  }, []);
 
   return (
     <nav
@@ -210,12 +229,12 @@ export const Navbar = () => {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
+                  <button
                     className="dropdown-item text-body-secondary"
-                    to="/sign-out"
+                    onClick={handleSignOut}
                   >
                     Sign out
-                  </NavLink>
+                  </button>
                 </li>
               </ul>
             </div>

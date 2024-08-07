@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -19,7 +19,9 @@ import { SkirtsPage } from "./layouts/ProductsPage/SkirtsPage";
 import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
 import { ShirtsPage } from "./layouts/ProductsPage/ShirtsPage";
 import { ProductCheckoutPage } from "./layouts/ProductCheckoutPage/ProductCheckoutPage";
-
+import { LoginPage } from "./auth/LoginPage";
+import { parseJwt, scheduleTokenRefresh } from "./auth/utils/auth";
+import { SignUpPage } from "./auth/SignUpPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -29,6 +31,30 @@ function App() {
       displayProductRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      const parsedToken = parseJwt(accessToken);
+      if (parsedToken) {
+        const tokenExpiration = parsedToken.exp * 1000;
+        const now = new Date().getTime();
+        if (now < tokenExpiration) {
+          scheduleTokenRefresh(tokenExpiration - now);
+        } else {
+          // Token is expired, prompt login
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = "/login";
+        }
+      } else {
+        // Invalid token, prompt loginf
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/login";
+      }
+    }
+  }, []);
 
   return (
     <Router>
@@ -59,6 +85,10 @@ function App() {
           <Route path="/product/search" component={SearchPage} />
           {/* END PRODUCT */}
           <Route path="/checkout/:productId" component={ProductCheckoutPage} />
+          {/* AUTH */}
+          <Route path="/sign-in" component={LoginPage} />
+          <Route path="/sign-up" component={SignUpPage} />
+          {/* END AUTH */}
         </Switch>
         <Footer />
       </div>

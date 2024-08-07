@@ -4,14 +4,17 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 import defaultImg from "../../img/logo/espada.png";
 import { DisplayProduct } from "../ProductsPage/DisplayProducts";
+import { StarsReview } from "../Utils/StarReview";
+import { Link } from "react-router-dom";
 
 export const ProductCheckoutPage = () => {
   const [product, setProduct] = useState<ProductModel>();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState(null);
-  
-  const productId = (window.location.pathname).split('/')[2];
-  // TODO: it will be changed to api/order/bestsellers
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
+
+  const productId = window.location.pathname.split("/")[2];
   const bestSellerUrl = `http://localhost:8080/api/product/subtype/${product?.subtype}`;
   const getImageSrc = (base64: string) => {
     return `data:image/jpeg;base64,${base64}`;
@@ -20,8 +23,7 @@ export const ProductCheckoutPage = () => {
   const url = `http://localhost:8080/api/product/${productId}`;
 
   useEffect(() => {
-    const fetchProducts = async () => {    
-
+    const fetchProducts = async () => {
       const response = await fetch(url);
 
       if (!response.ok) {
@@ -31,19 +33,19 @@ export const ProductCheckoutPage = () => {
       const responseJson = await response.json();
       const responseData = responseJson.result;
 
-      const loadedProduct : ProductModel = {
-          id: responseData.id,
-          name: responseData.name,
-          price: responseData.price,
-          color: responseData.color,
-          material: responseData.material,
-          size: responseData.size,
-          gender: responseData.gender,
-          stock: responseData.stock,
-          subtype: responseData.subtype.name,
-          image: responseData.image,
-          description: responseData.description,
-        };
+      const loadedProduct: ProductModel = {
+        id: responseData.id,
+        name: responseData.name,
+        price: responseData.price,
+        color: responseData.color,
+        material: responseData.material,
+        size: responseData.size,
+        gender: responseData.gender,
+        stock: responseData.stock,
+        subtype: responseData.subtype.name,
+        image: responseData.image,
+        description: responseData.description,
+      };
 
       setProduct(loadedProduct);
       setIsLoading(false);
@@ -57,30 +59,46 @@ export const ProductCheckoutPage = () => {
     window.scrollTo(0, 0);
   }, [url]);
 
+  const handleSizeSelection = (size: string) => {
+    setSelectedSize(size);
+  };
+
+  const handleQuantityChange = (increment: number) => {
+    setQuantity((prevQuantity) => Math.max(1, Math.min(prevQuantity + increment, product?.stock || 0)));
+  };
+
   if (isLoading) {
     return <SpinnerLoading />;
   }
 
   if (httpError) {
     return (
-      <section className="d-flex justify-content-center align-items-center" style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <img src={failToFetchImg} alt="Failed to fetch" style={{width: '100%', 
-          height: '100%'}} />
-        <div style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%', 
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          color: 'white', 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          fontSize: '4rem', 
-          fontWeight: 'bold', 
-          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-        }}>
+      <section
+        className="d-flex justify-content-center align-items-center"
+        style={{ position: "relative", width: "100%", height: "100%" }}
+      >
+        <img
+          src={failToFetchImg}
+          alt="Failed to fetch"
+          style={{ width: "100%", height: "100%" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "4rem",
+            fontWeight: "bold",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
+          }}
+        >
           FAIL TO LOAD PRODUCT
         </div>
       </section>
@@ -90,28 +108,97 @@ export const ProductCheckoutPage = () => {
   return (
     <div className="container mt-5">
       <div className="row justify-content-center mb-3">
-        <div className="col-sm-3 col-md-3">
-        {product?.image ?
-          <img src={getImageSrc(product.image)} width='500' height='600' alt={product.id}/>
-          :
-          <img src={defaultImg} width='226' height='349' alt="default image"/>
-        }
+        <div className="col-sm-12 col-md-6 text-center">
+          {product?.image ? (
+            <img
+              src={getImageSrc(product.image)}
+              className="img-fluid"
+              alt={product.id}
+            />
+          ) : (
+            <img src={defaultImg} className="img-fluid" alt="default" />
+          )}
         </div>
-        <div className="col-3 col-md-3 container">
-          <h2 style={{fontSize: '3rem'}}>{product?.name}</h2>
+        <div className="col-sm-12 col-md-6">
+          <h2
+            className="display-4"
+            style={{ fontSize: "3rem", fontWeight: "400" }}
+          >
+            <strong>{product?.name}</strong>
+          </h2>
           <h3>{product?.price}$</h3>
+
+          <div className="mt-3">
+            <p style={{fontSize: '1.2rem'}}>Size:</p>
+            {["M", "L", "XL"].map((size) => (
+              <button
+                key={size}
+                className={`btn btn-outline-secondary me-2 ${
+                  selectedSize === size ? "active" : ""
+                }`}
+                onClick={() => handleSizeSelection(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-3">
+            <p style={{fontSize: '1.2rem'}}>Quantity:</p>
+            <div className="d-flex align-items-center">
+              <div
+                style={{
+                  border: "1px solid #ced4da",
+                  padding: "0.375rem 0.75rem",
+                  borderRadius: "0.25rem",
+                }}
+              >
+                <button
+                  className="btn"
+                  onClick={() => handleQuantityChange(-1)}
+                  style={{ border: "none" }}
+                >
+                  -
+                </button>
+                <span className="ms-3 me-3">{quantity}</span>
+                <button
+                  className="btn"
+                  onClick={() => handleQuantityChange(1)}
+                  style={{ border: "none" }}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-3 mb-3">
+            <Link to="#"
+              className="btn btn-outline-secondary mt-3"
+              style={{ width: "50%" }}
+            >
+              Add to Cart
+            </Link>
+          </div>
+
           <p>Material: {product?.material}</p>
-          <p>Size: {product?.size}</p>
+          <p>Form: {product?.size}</p>
           <p>Color: {product?.color}</p>
           <p>Gender: {product?.gender}</p>
           <p>Stock: {product?.stock}</p>
           <p>Description: {product?.description}</p>
+          <StarsReview rating={0} size={32} />
         </div>
       </div>
-      <h2 style={{fontSize:'3rem'}}>You may also like</h2>
+      <h2 className="display-4" style={{ fontSize: "3rem", fontWeight: "400" }}>
+        <strong>You may also like</strong>
+      </h2>
       <div className="row justify-content-center">
-        <DisplayProduct baseUrl={bestSellerUrl} notDisplayedProduct={product?.id}/>
+        <DisplayProduct
+          baseUrl={bestSellerUrl}
+          notDisplayedProduct={product?.id}
+        />
       </div>
     </div>
   );
-}
+};

@@ -12,7 +12,8 @@ html {
   text-align: center;
   align-content: center;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5); /* Optional: for better visibility of the text */
+  background-color: rgba(0, 0, 0, 0.5); 
+  
 }
 
 .carousel-caption strong h1 {
