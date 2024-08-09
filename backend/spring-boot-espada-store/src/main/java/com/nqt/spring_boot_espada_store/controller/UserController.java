@@ -1,7 +1,9 @@
 package com.nqt.spring_boot_espada_store.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) throws MessagingException, UnsupportedEncodingException {
         UserResponse userResponse = userService.createUser(request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userResponse);

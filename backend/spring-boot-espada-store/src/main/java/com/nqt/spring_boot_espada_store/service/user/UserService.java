@@ -1,14 +1,16 @@
 package com.nqt.spring_boot_espada_store.service.user;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
+import jakarta.mail.MessagingException;
 
 public interface UserService {
 
-    UserResponse createUser(UserCreationRequest userRequest);
+    UserResponse createUser(UserCreationRequest userRequest) throws MessagingException, UnsupportedEncodingException;
 
     UserResponse updateUser(String id, UserUpdateRequest userRequest);
 

@@ -1,14 +1,17 @@
 package com.nqt.spring_boot_espada_store.service.user;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 
-import com.nqt.spring_boot_espada_store.repository.CustomerRepository;
+import com.nqt.spring_boot_espada_store.Utils;
+import com.nqt.spring_boot_espada_store.entity.VerifyCode;
+import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
@@ -33,27 +36,38 @@ import org.springframework.stereotype.Service;
 public class UserServiceImp implements UserService {
 
     UserRepository userRepository;
-    CustomerRepository customerRepository;
     RoleRepository roleRepository;
+    VerifyCodeRepository verifyCodeRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
+    Utils utils;
+
     @Override
-    public UserResponse createUser(UserCreationRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
+    public UserResponse createUser(UserCreationRequest request)
+            throws MessagingException, UnsupportedEncodingException {
+        if (userRepository.existsUserByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
         User user = userMapper.toUser(request);
 
         List<Role> roles = roleRepository.findAllById(request.getRoles());
+
         user.setRoles(new HashSet<>(roles));
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String id = String.format("%s%s", user.getUsername(), user.getPhoneNumber());
         user.setId(id);
+        userRepository.save(user);
 
-        return userMapper.toUserResponse(userRepository.save(user));
+        if (request.getRoles().contains("USER")) {
+            VerifyCode verifyCode = utils.generateVerifyCode(user);
+            verifyCodeRepository.save(verifyCode);
+            utils.sendVerificationEmail(verifyCode.getVerifyCode(), user);
+        }
+
+        return userMapper.toUserResponse(user);
     }
 
     @Override
@@ -117,9 +131,6 @@ public class UserServiceImp implements UserService {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String id) {
-        User deletedUser = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        customerRepository.deleteCustomerByUser(deletedUser);
-
         userRepository.deleteById(id);
     }
 }

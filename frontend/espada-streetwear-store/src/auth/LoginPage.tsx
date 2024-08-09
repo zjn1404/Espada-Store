@@ -27,7 +27,7 @@ export const LoginPage = () => {
       history.push("/");
       window.location.reload()
     } catch (err: any) {
-      setError("Invalid credentials");
+      setError(err.response.data.message);
     }
   };
 
@@ -92,7 +92,7 @@ export const LoginPage = () => {
           </a>
         </div>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="text-center" style={{color: 'red'}}>{error}</p>}
     </div>
   );
 };

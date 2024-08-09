@@ -159,7 +159,7 @@ export const Navbar = () => {
                   <li>
                     <NavLink
                       className="dropdown-item text-body-secondary"
-                      to="/sign-up"
+                      to="/sign-up/user"
                     >
                       Sign up
                     </NavLink>

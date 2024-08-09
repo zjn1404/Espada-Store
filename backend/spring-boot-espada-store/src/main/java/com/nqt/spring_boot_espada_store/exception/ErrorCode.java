@@ -29,6 +29,10 @@ public enum ErrorCode {
     ROLE_NOT_EXISTED(1015, HttpStatus.BAD_REQUEST, "Role Not Existed"),
     CUSTOMER_DETAIL_EXISTED(1016, HttpStatus.BAD_REQUEST, "Customer Detail Existed"),
     CUSTOMER_DETAIL_NOT_EXISTED(1017, HttpStatus.BAD_REQUEST, "Customer Detail Not Existed"),
+    USER_NOT_VERIFIED(1018, HttpStatus.BAD_REQUEST, "User Not Verified"),
+    VERIFY_CODE_INCORRECT(1019, HttpStatus.BAD_REQUEST, "Verify Code Incorrect"),
+    VERIFY_CODE_EXPIRED(1020, HttpStatus.BAD_REQUEST, "Verify Code Expired, New Code Has Been Sent"),
+    ACCOUNT_NOT_VERIFIED(1021, HttpStatus.BAD_REQUEST, "Account Not Verified"),
     ;
 
     final int code;

@@ -11,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomerDetailCreationRequest {
-
+    String username;
     String gender;
     String address;
     String deliveryAddress;

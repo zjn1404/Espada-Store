@@ -10,7 +10,7 @@ import com.nqt.spring_boot_espada_store.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
-    boolean existsByUsername(String username);
+    boolean existsUserByUsername(String username);
 
     Optional<User> findByUsername(String username);
 }

@@ -22,6 +22,8 @@ import { ProductCheckoutPage } from "./layouts/ProductCheckoutPage/ProductChecko
 import { LoginPage } from "./auth/LoginPage";
 import { parseJwt, scheduleTokenRefresh } from "./auth/utils/auth";
 import { SignUpPage } from "./auth/SignUpPage";
+import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
+import { VerifySuccessPage } from "./auth/VerifySuccessPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -45,7 +47,7 @@ function App() {
           // Token is expired, prompt login
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
-          window.location.href = "/login";
+          window.location.href = "/sign-in";
         }
       } else {
         // Invalid token, prompt loginf
@@ -87,8 +89,13 @@ function App() {
           <Route path="/checkout/:productId" component={ProductCheckoutPage} />
           {/* AUTH */}
           <Route path="/sign-in" component={LoginPage} />
-          <Route path="/sign-up" component={SignUpPage} />
+          <Route path="/sign-up/:role" component={SignUpPage} />
+          <Route path="/sign-up-success" component={SignUpSuccessPage} />
+          <Route path="/verification-success" component={VerifySuccessPage} />
           {/* END AUTH */}
+
+          {/* ADMIN */}
+          {/* END ADMIN */}
         </Switch>
         <Footer />
       </div>

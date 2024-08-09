@@ -29,7 +29,9 @@ public class CustomerServiceImp implements CustomerDetailService{
 
     @Override
     public CustomerDetailResponse create(CustomerDetailCreationRequest request) {
-        User user = getUser();
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
         if (customerRepository.existsById(user.getId())) {
             throw new AppException(ErrorCode.CUSTOMER_DETAIL_EXISTED);
         }

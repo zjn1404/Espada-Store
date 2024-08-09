@@ -11,6 +11,17 @@ spring:
     password: root
   jpa:
     show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nqt460@gmail.com
+    password: "rjkb ygqs qpur gqut"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 jwt:
   signerKey: "GF8bIi7ezOnrdsZvh1gt1sHc5E8KnJaybTf88q5GecpO4E6NhR0PENFaBM+ZEyVG"
@@ -20,3 +31,9 @@ jwt:
 
 page-size-default:
   product: 12
+
+verify-code:
+  valid-duration: 300 # in second
+
+success-request-code: 1000
+

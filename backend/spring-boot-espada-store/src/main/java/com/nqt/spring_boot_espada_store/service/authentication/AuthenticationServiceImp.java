@@ -11,6 +11,7 @@ import com.nqt.spring_boot_espada_store.dto.request.security.LogoutRequest;
 import com.nqt.spring_boot_espada_store.dto.request.security.RefreshTokenRequest;
 import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
 import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
+import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +46,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
     UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     PasswordEncoder passwordEncoder;
+    VerifyCodeRepository verifyCodeRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -78,9 +80,14 @@ public class AuthenticationServiceImp implements AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
         User user = userRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (verifyCodeRepository.existsByUserId(user.getId())) {
+            throw new AppException(ErrorCode.ACCOUNT_NOT_VERIFIED);
+        }
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 

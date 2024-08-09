@@ -23,11 +23,11 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_POST_ENDPOINTS = {
-            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"
+            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh", "/customer-info",
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**", "/type/**", "/subtype/**"
+            "/product/**", "/type/**", "/subtype/**", "/verify/**"
     };
 
     @Bean
