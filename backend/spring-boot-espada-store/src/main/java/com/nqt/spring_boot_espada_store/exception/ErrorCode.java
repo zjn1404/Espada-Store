@@ -33,6 +33,8 @@ public enum ErrorCode {
     VERIFY_CODE_INCORRECT(1019, HttpStatus.BAD_REQUEST, "Verify Code Incorrect"),
     VERIFY_CODE_EXPIRED(1020, HttpStatus.BAD_REQUEST, "Verify Code Expired, New Code Has Been Sent"),
     ACCOUNT_NOT_VERIFIED(1021, HttpStatus.BAD_REQUEST, "Account Not Verified"),
+    PASSWORD_INCORRECT(1022, HttpStatus.BAD_REQUEST, "Password Incorrect"),
+    THE_SAME_PASSWORD(1023, HttpStatus.BAD_REQUEST, "New Password Is The Same As Old Password"),
     ;
 
     final int code;

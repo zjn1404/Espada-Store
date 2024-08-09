@@ -1,14 +1,13 @@
 package com.nqt.spring_boot_espada_store.controller;
 
-import com.nqt.spring_boot_espada_store.dto.request.security.LogoutRequest;
-import com.nqt.spring_boot_espada_store.dto.request.security.RefreshTokenRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.*;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nqt.spring_boot_espada_store.dto.request.security.AuthenticationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.security.IntrospectRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.AuthenticationResponse;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;
@@ -25,6 +24,10 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
+
+    @NonFinal
+    @Value("${success-request-code}")
+    int SUCCESS_REQUEST_CODE;
 
     @PostMapping("/token")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
@@ -64,5 +67,15 @@ public class AuthenticationController {
         apiResponse.setMessage("Successfully logged out");
 
         return apiResponse;
+    }
+
+    @PostMapping("/change-password")
+    public ApiResponse<Object> changePassword(@RequestBody ChangePasswordRequest request) {
+        authenticationService.changePassword(request);
+
+        return ApiResponse.builder()
+                .code(SUCCESS_REQUEST_CODE)
+                .message("Successfully changed password")
+                .build();
     }
 }

@@ -22,7 +22,5 @@ public class UserUpdateRequest {
     String phoneNumber;
     String firstName;
     String lastName;
-    // TODO: Consider to delete
-    boolean enabled;
     Set<String> roles;
 }

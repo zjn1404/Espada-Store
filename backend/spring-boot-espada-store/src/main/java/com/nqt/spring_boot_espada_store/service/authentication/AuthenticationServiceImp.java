@@ -7,13 +7,14 @@ import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-import com.nqt.spring_boot_espada_store.dto.request.security.LogoutRequest;
-import com.nqt.spring_boot_espada_store.dto.request.security.RefreshTokenRequest;
+import com.nqt.spring_boot_espada_store.dto.request.security.*;
 import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
 import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
 import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,8 +24,6 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.nqt.spring_boot_espada_store.dto.request.security.AuthenticationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.security.IntrospectRequest;
 import com.nqt.spring_boot_espada_store.dto.response.AuthenticationResponse;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;
 import com.nqt.spring_boot_espada_store.entity.User;
@@ -241,5 +240,22 @@ public class AuthenticationServiceImp implements AuthenticationService {
         });
 
         return joiner.toString();
+    }
+
+    public void changePassword(ChangePasswordRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.PASSWORD_INCORRECT);
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.THE_SAME_PASSWORD);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.saveAndFlush(user);
     }
 }
