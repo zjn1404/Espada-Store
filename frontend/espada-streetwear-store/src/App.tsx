@@ -24,6 +24,7 @@ import { parseJwt, scheduleTokenRefresh } from "./auth/utils/auth";
 import { SignUpPage } from "./auth/SignUpPage";
 import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
 import { VerifySuccessPage } from "./auth/VerifySuccessPage";
+import { ChangePasswordPage } from "./auth/ChangePasswordPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -87,12 +88,13 @@ function App() {
           <Route path="/product/search" component={SearchPage} />
           {/* END PRODUCT */}
           <Route path="/checkout/:productId" component={ProductCheckoutPage} />
-          {/* AUTH */}
+          {/* USER */}
           <Route path="/sign-in" component={LoginPage} />
           <Route path="/sign-up/:role" component={SignUpPage} />
           <Route path="/sign-up-success" component={SignUpSuccessPage} />
           <Route path="/verification-success" component={VerifySuccessPage} />
-          {/* END AUTH */}
+          <Route path="/change-password" component={ChangePasswordPage} />
+          {/* END USER */}
 
           {/* ADMIN */}
           {/* END ADMIN */}
