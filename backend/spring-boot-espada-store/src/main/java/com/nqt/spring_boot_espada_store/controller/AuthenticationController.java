@@ -1,6 +1,7 @@
 package com.nqt.spring_boot_espada_store.controller;
 
 import com.nqt.spring_boot_espada_store.dto.request.security.*;
+import jakarta.validation.Valid;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,7 +71,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password")
-    public ApiResponse<Object> changePassword(@RequestBody ChangePasswordRequest request) {
+    public ApiResponse<Object> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         authenticationService.changePassword(request);
 
         return ApiResponse.builder()

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./sign-in.css";
-import { useHistory} from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [scope, setScope] = useState("USER");
   const history = useHistory();
 
   const handleLogin = async (e: any) => {
@@ -19,20 +20,24 @@ export const LoginPage = () => {
           password,
         }
       );
-      
+
       const { accessToken, refreshToken } = response.data.result;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
+
       setError(null);
       history.push("/");
-      window.location.reload()
+      window.location.reload();
     } catch (err: any) {
       setError(err.response.data.message);
     }
   };
 
   return (
+
     <div className="form-signin w-100 m-auto">
+      {localStorage.getItem("accessToken") && <Redirect to="/" />}
+
       <form className="mt-5" onSubmit={handleLogin}>
         <h1 className="h3 mb-3 fw-normal text-body-secondary">Sign in</h1>
 
@@ -92,7 +97,11 @@ export const LoginPage = () => {
           </a>
         </div>
       </form>
-      {error && <p className="text-center" style={{color: 'red'}}>{error}</p>}
+      {error && (
+        <p className="text-center" style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 };

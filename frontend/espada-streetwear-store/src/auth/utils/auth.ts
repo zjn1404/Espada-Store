@@ -1,4 +1,9 @@
 import axios from "axios";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
+interface CustomJwtPayload extends JwtPayload {
+  scope: string;
+}
 
 export const refreshToken = async (): Promise<string> => {
   try {
@@ -40,6 +45,16 @@ export const parseJwt = (token: string): any => {
     return JSON.parse(jsonPayload);
   } catch (e) {
     console.error("Failed to parse JWT", e);
+    return null;
+  }
+};
+
+export const decodeJwt = (token: string): CustomJwtPayload | null => {
+  try {
+    const decoded = jwtDecode<CustomJwtPayload>(token);
+    return decoded;
+  } catch (error) {
+    console.error("Failed to decode JWT", error);
     return null;
   }
 };

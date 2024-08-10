@@ -25,6 +25,7 @@ import { SignUpPage } from "./auth/SignUpPage";
 import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
 import { VerifySuccessPage } from "./auth/VerifySuccessPage";
 import { ChangePasswordPage } from "./auth/ChangePasswordPage";
+import { UpdateInformationPage } from "./auth/UpdateInformationPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -94,6 +95,7 @@ function App() {
           <Route path="/sign-up-success" component={SignUpSuccessPage} />
           <Route path="/verification-success" component={VerifySuccessPage} />
           <Route path="/change-password" component={ChangePasswordPage} />
+          <Route path="/update-info" component={UpdateInformationPage} />
           {/* END USER */}
 
           {/* ADMIN */}

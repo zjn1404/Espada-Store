@@ -64,7 +64,9 @@ export const ProductCheckoutPage = () => {
   };
 
   const handleQuantityChange = (increment: number) => {
-    setQuantity((prevQuantity) => Math.max(1, Math.min(prevQuantity + increment, product?.stock || 0)));
+    setQuantity((prevQuantity) =>
+      Math.max(1, Math.min(prevQuantity + increment, product?.stock || 0))
+    );
   };
 
   if (isLoading) {
@@ -129,7 +131,7 @@ export const ProductCheckoutPage = () => {
           <h3>{product?.price}$</h3>
 
           <div className="mt-3">
-            <p style={{fontSize: '1.2rem'}}>Size:</p>
+            <p style={{ fontSize: "1.2rem" }}>Size:</p>
             {["M", "L", "XL"].map((size) => (
               <button
                 key={size}
@@ -144,7 +146,7 @@ export const ProductCheckoutPage = () => {
           </div>
 
           <div className="mt-3">
-            <p style={{fontSize: '1.2rem'}}>Quantity:</p>
+            <p style={{ fontSize: "1.2rem" }}>Quantity:</p>
             <div className="d-flex align-items-center">
               <div
                 style={{
@@ -171,15 +173,27 @@ export const ProductCheckoutPage = () => {
               </div>
             </div>
           </div>
-
-          <div className="mt-3 mb-3">
-            <Link to="#"
-              className="btn btn-outline-secondary mt-3"
-              style={{ width: "50%" }}
-            >
-              Add to Cart
-            </Link>
-          </div>
+          {localStorage.getItem("accessToken") ? (
+            <div className="mt-3 mb-3">
+              <Link
+                to="#"
+                className="btn btn-outline-secondary mt-3"
+                style={{ width: "50%" }}
+              >
+                Add to Cart
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-3 mb-3">
+              <Link
+                to="/sign-in"
+                className="btn btn-outline-secondary mt-3"
+                style={{ width: "50%" }}
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
 
           <p>Material: {product?.material}</p>
           <p>Form: {product?.size}</p>
