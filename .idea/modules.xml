@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/espada-streetwear-store-website.iml" filepath="$PROJECT_DIR$/.idea/espada-streetwear-store-website.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/spring-boot-espada-store/spring-boot-espada-store.iml" filepath="$PROJECT_DIR$/backend/spring-boot-espada-store/spring-boot-espada-store.iml" />
     </modules>
   </component>
 </project>

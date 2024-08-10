@@ -51,4 +51,6 @@ public class User {
     @PrimaryKeyJoinColumn
     CustomerDetail customerDetail;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<Cart> carts;
 }

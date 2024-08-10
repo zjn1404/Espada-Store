@@ -35,6 +35,8 @@ public enum ErrorCode {
     ACCOUNT_NOT_VERIFIED(1021, HttpStatus.BAD_REQUEST, "Account Not Verified"),
     PASSWORD_INCORRECT(1022, HttpStatus.BAD_REQUEST, "Password Incorrect"),
     THE_SAME_PASSWORD(1023, HttpStatus.BAD_REQUEST, "New Password Is The Same As Old Password"),
+    QUANTITY_INVALID(1024, HttpStatus.BAD_REQUEST, "Quantity MUST BE AT LEAST 1"),
+    CART_NOT_EXISTED(1024, HttpStatus.BAD_REQUEST, "Cart Not Existed"),
     ;
 
     final int code;

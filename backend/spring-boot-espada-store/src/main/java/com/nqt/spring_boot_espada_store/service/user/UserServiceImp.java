@@ -57,7 +57,8 @@ public class UserServiceImp implements UserService {
         user.setRoles(new HashSet<>(roles));
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        String id = String.format("%s%s", user.getUsername(), user.getPhoneNumber());
+        String role = request.getRoles().contains("ADMIN") ? "a" : "c";
+        String id = String.format("%s%s%s", role, user.getUsername(), user.getPhoneNumber());
         user.setId(id);
         userRepository.save(user);
 
