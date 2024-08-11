@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Entity(name = "cart")
 @Getter
 @Setter
@@ -12,8 +14,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Cart {
 
-    @EmbeddedId
-    private CartId id;
+    @Id
+    @Column(name = "cart_id")
+    String id;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
@@ -22,7 +25,6 @@ public class Cart {
                     CascadeType.DETACH, CascadeType.REFRESH
             }
     )
-    @MapsId("customerId")
     @JoinColumn(name = "customer_id")
     User user;
 
@@ -33,18 +35,16 @@ public class Cart {
                     CascadeType.DETACH, CascadeType.REFRESH
             }
     )
-    @MapsId("productId")
     @JoinColumn(name = "product_id")
     Product product;
 
-    @Column(name = "quantity")
-    int quantity;
+    @OneToMany(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    Set<CartDetail> cartDetails;
 
-    public Cart(User user, Product product, int quantity) {
+    public Cart(User user, Product product) {
+        this.id = user.getId() + product.getId();
         this.user = user;
         this.product = product;
-        this.quantity = quantity;
-        this.id = new CartId(user.getId(), product.getId());
     }
 }
 

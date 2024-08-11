@@ -34,4 +34,6 @@ public class ProductCreationRequest {
     MultipartFile image;
 
     String subtype;
+
+    String form;
 }

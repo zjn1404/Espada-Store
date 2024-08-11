@@ -37,6 +37,7 @@ public enum ErrorCode {
     THE_SAME_PASSWORD(1023, HttpStatus.BAD_REQUEST, "New Password Is The Same As Old Password"),
     QUANTITY_INVALID(1024, HttpStatus.BAD_REQUEST, "Quantity MUST BE AT LEAST 1"),
     CART_NOT_EXISTED(1024, HttpStatus.BAD_REQUEST, "Cart Not Existed"),
+    CART_DETAIL_NOT_EXISTED(1024, HttpStatus.BAD_REQUEST, "Cart Detail Not Existed");
     ;
 
     final int code;

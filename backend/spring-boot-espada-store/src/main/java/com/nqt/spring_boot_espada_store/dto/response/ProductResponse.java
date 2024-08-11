@@ -5,8 +5,6 @@ import jakarta.persistence.Lob;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.sql.Blob;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,6 +23,8 @@ public class ProductResponse {
     String material;
 
     String size;
+
+    String form;
 
     String gender;
 

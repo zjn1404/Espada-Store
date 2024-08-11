@@ -14,6 +14,7 @@ import { PantsPage } from "./layouts/ProductsPage/PantsPage";
 import { ShortsPage } from "./layouts/ProductsPage/ShortsPage";
 import { SearchPage } from "./layouts/ProductsPage/SearchPage";
 import { BagsPage } from "./layouts/ProductsPage/BagsPage";
+import { HeadwearPage } from "./layouts/ProductsPage/HeadwearPage";
 import { JacketsPage } from "./layouts/ProductsPage/JacketsPage";
 import { SkirtsPage } from "./layouts/ProductsPage/SkirtsPage";
 import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
@@ -26,6 +27,7 @@ import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
 import { VerifySuccessPage } from "./auth/VerifySuccessPage";
 import { ChangePasswordPage } from "./auth/ChangePasswordPage";
 import { UpdateInformationPage } from "./auth/UpdateInformationPage";
+import { CartPage } from "./layouts/CartPage/CartPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -86,6 +88,7 @@ function App() {
           <Route path="/product/shorts" component={ShortsPage} />
           <Route path="/product/skirt" component={SkirtsPage} />
           <Route path="/product/bag" component={BagsPage} />
+          <Route path="/product/headwear" component={HeadwearPage} />
           <Route path="/product/search" component={SearchPage} />
           {/* END PRODUCT */}
           <Route path="/checkout/:productId" component={ProductCheckoutPage} />
@@ -97,7 +100,7 @@ function App() {
           <Route path="/change-password" component={ChangePasswordPage} />
           <Route path="/update-info" component={UpdateInformationPage} />
           {/* END USER */}
-
+          <Route path="/cart" component={CartPage} />
           {/* ADMIN */}
           {/* END ADMIN */}
         </Switch>

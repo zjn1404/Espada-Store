@@ -45,6 +45,9 @@ public class Product {
     @Column(name = "stock")
     int stock;
 
+    @Column(name = "form")
+    String form;
+
     @Column(name = "img")
     @Lob
     String image;

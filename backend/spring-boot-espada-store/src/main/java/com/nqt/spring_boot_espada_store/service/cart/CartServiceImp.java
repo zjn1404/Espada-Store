@@ -1,23 +1,24 @@
 package com.nqt.spring_boot_espada_store.service.cart;
 
 import com.nqt.spring_boot_espada_store.dto.response.CartResponse;
-import com.nqt.spring_boot_espada_store.entity.Cart;
-import com.nqt.spring_boot_espada_store.entity.CartId;
-import com.nqt.spring_boot_espada_store.entity.Product;
-import com.nqt.spring_boot_espada_store.entity.User;
+import com.nqt.spring_boot_espada_store.entity.*;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.CartMapper;
+import com.nqt.spring_boot_espada_store.repository.CartDetailRepository;
 import com.nqt.spring_boot_espada_store.repository.CartRepository;
 import com.nqt.spring_boot_espada_store.repository.ProductRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,42 +26,76 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartServiceImp implements CartService{
 
+    private static final Logger log = LoggerFactory.getLogger(CartServiceImp.class);
     CartRepository cartRepository;
+    CartDetailRepository cartDetailRepository;
     UserRepository userRepository;
     ProductRepository productRepository;
 
     CartMapper cartMapper;
 
     @Override
-    public CartResponse addItemToCart(String productId, int quantity) {
+    public CartResponse addItemToCart(String productId, int quantity, String size) {
         User user = getUser();
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
-        Cart cart = new Cart(user, product, quantity);
+        Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId).orElse(new Cart(user, product));
+        if (cart.getCartDetails() == null) {
+            cart.setCartDetails(new HashSet<>());
+        }
+
+        CartDetail cartDetail = cartDetailRepository.findById(new CartDetailId(cart.getId(), size))
+                .orElse(new CartDetail(new CartDetailId(cart.getId(), size)));
+        int currentQuantity = cartDetail.getQuantity();
+
+        cartDetail.setQuantity(currentQuantity + quantity);
+        cartDetail.setCart(cart);
+
+        cart.getCartDetails().remove(cartDetail);
+        cart.getCartDetails().add(cartDetail);
+
         cartRepository.save(cart);
 
         return cartMapper.toCartResponse(cart);
     }
 
     @Override
-    public CartResponse updateQuantityItemInCart(String productId, int quantity) {
+    public CartResponse updateItemInCart(String productId, int quantity, String size) {
         User user = getUser();
 
-        Cart cart = cartRepository.findById(new CartId(user.getId(), productId))
+        Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_EXISTED));
 
-        cart.setQuantity(quantity);
-        cartRepository.saveAndFlush(cart);
+        CartDetailId cartDetailId = new CartDetailId(cart.getId(), size);
+        for (CartDetail cartDetail : cart.getCartDetails()) {
+            if (cartDetail.getCartDetailId().equals(cartDetailId)) {
+                cartDetail.setQuantity(quantity);
+                cartDetailRepository.saveAndFlush(cartDetail);
+                break;
+            }
+        }
 
         return cartMapper.toCartResponse(cart);
     }
 
     @Override
-    public void removeItemFromCart(String productId) {
+    public void removeItemFromCart(String productId, String size) {
         User user = getUser();
-        CartId cartId = new CartId(user.getId(), productId);
-        cartRepository.deleteById(cartId);
+        Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId)
+                        .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_EXISTED));
+        if (cart.getCartDetails() == null || cart.getCartDetails().isEmpty()) {
+            cartRepository.deleteById(cart.getId());
+        } else {
+            CartDetailId cartDetailId = new CartDetailId(cart.getId(), size);
+            cart.getCartDetails().remove(new CartDetail(cartDetailId));
+            cartDetailRepository.deleteById(cartDetailId);
+            cartRepository.saveAndFlush(cart);
+
+            if (cart.getCartDetails() == null || cart.getCartDetails().isEmpty()) {
+                cartRepository.deleteById(cart.getId());
+            }
+        }
     }
 
     @Override
@@ -68,7 +103,7 @@ public class CartServiceImp implements CartService{
 
         User user = getUser();
 
-        return cartRepository.findCartResponsesByUser(user);
+        return cartRepository.findCartResponsesByUser(user).stream().map(cartMapper::toCartResponse).toList();
     }
 
     private User getUser() {

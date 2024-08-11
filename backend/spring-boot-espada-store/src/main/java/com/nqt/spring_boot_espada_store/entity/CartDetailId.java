@@ -14,8 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CartId implements Serializable {
-
-    String customerId;
-    String productId;
+public class CartDetailId implements Serializable {
+    String cartId;
+    String size;
 }

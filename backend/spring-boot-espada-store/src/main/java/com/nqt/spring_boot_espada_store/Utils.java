@@ -32,8 +32,6 @@ public class Utils {
     JavaMailSender mailSender;
 
     public VerifyCode generateVerifyCode(User user) {
-
-
         Date expiryDate = new Date(Instant.now().plus(VERIFY_CODE_VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli());
 
         return VerifyCode.builder()

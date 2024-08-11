@@ -24,9 +24,11 @@ public class CartController {
 
     CartService cartService;
 
-    @GetMapping("/{productId}/{quantity}")
-    public ApiResponse<CartResponse> addToCart(@PathVariable(name = "productId") String productId, @PathVariable(name = "quantity") int quantity) {
-        CartResponse cartResponse = cartService.addItemToCart(productId, quantity);
+    @GetMapping("/{productId}/{size}/{quantity}")
+    public ApiResponse<CartResponse> addToCart(@PathVariable(name = "productId") String productId,
+                                               @PathVariable(name = "quantity") int quantity,
+                                               @PathVariable(name = "size") String size) {
+        CartResponse cartResponse = cartService.addItemToCart(productId, quantity,  size);
 
         return ApiResponse.<CartResponse>builder()
                 .code(SUCCESS_REQUEST_CODE)
@@ -44,9 +46,11 @@ public class CartController {
                 .build();
     }
 
-    @PutMapping("/{productId}/{quantity}")
-    public ApiResponse<CartResponse> updateQuantity(@PathVariable(name = "productId") String productId, @PathVariable(name = "quantity") int quantity) {
-        CartResponse cartResponse = cartService.updateQuantityItemInCart(productId, quantity);
+    @PutMapping("/{productId}/{size}/{quantity}")
+    public ApiResponse<CartResponse> updateQuantity(@PathVariable(name = "productId") String productId,
+                                                    @PathVariable(name = "quantity") int quantity,
+                                                    @PathVariable(name = "size") String size) {
+        CartResponse cartResponse = cartService.updateItemInCart(productId, quantity, size);
 
         return ApiResponse.<CartResponse>builder()
                 .code(SUCCESS_REQUEST_CODE)
@@ -54,9 +58,10 @@ public class CartController {
                 .build();
     }
 
-    @DeleteMapping("/{productId}")
-    public ApiResponse<Object> removeItemFromCart(@PathVariable(name = "productId") String productId) {
-        cartService.removeItemFromCart(productId);
+    @DeleteMapping("/{productId}/{size}")
+    public ApiResponse<Object> removeItemFromCart(@PathVariable(name = "productId") String productId,
+                                                  @PathVariable(name = "size") String size) {
+        cartService.removeItemFromCart(productId, size);
 
         return ApiResponse.builder()
                 .code(SUCCESS_REQUEST_CODE)

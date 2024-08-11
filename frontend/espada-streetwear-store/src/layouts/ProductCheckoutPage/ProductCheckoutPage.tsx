@@ -6,6 +6,7 @@ import defaultImg from "../../img/logo/espada.png";
 import { DisplayProduct } from "../ProductsPage/DisplayProducts";
 import { StarsReview } from "../Utils/StarReview";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export const ProductCheckoutPage = () => {
   const [product, setProduct] = useState<ProductModel>();
@@ -13,6 +14,7 @@ export const ProductCheckoutPage = () => {
   const [httpError, setHttpError] = useState(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [alert, setAlert] = useState({ show: false, type: "", message: "" });
 
   const productId = window.location.pathname.split("/")[2];
   const bestSellerUrl = `http://localhost:8080/api/product/subtype/${product?.subtype}`;
@@ -21,6 +23,50 @@ export const ProductCheckoutPage = () => {
   };
 
   const url = `http://localhost:8080/api/product/${productId}`;
+
+  const handleAddToCart = async () => {
+    try {
+      if (!selectedSize) {
+        setAlert({
+          show: true,
+          type: "danger",
+          message: "Please select a size before adding to cart.",
+        });
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:8080/api/cart/${productId}/${selectedSize}/${
+          quantity || 1
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        }
+      );
+
+      if (response.data.code === 1000) {
+        setAlert({
+          show: true,
+          type: "success",
+          message: "Item added to cart successfully!",
+        });
+      } else {
+        setAlert({
+          show: true,
+          type: "danger",
+          message: `Failed to add item: ${response.data.message}`,
+        });
+      }
+    } catch (error) {
+      setAlert({
+        show: true,
+        type: "danger",
+        message: "An error occurred. Please try again.",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,6 +86,7 @@ export const ProductCheckoutPage = () => {
         color: responseData.color,
         material: responseData.material,
         size: responseData.size,
+        form: responseData.form,
         gender: responseData.gender,
         stock: responseData.stock,
         subtype: responseData.subtype.name,
@@ -132,7 +179,7 @@ export const ProductCheckoutPage = () => {
 
           <div className="mt-3">
             <p style={{ fontSize: "1.2rem" }}>Size:</p>
-            {["M", "L", "XL"].map((size) => (
+            {product?.size.split("/").map((size) => (
               <button
                 key={size}
                 className={`btn btn-outline-secondary me-2 ${
@@ -179,9 +226,19 @@ export const ProductCheckoutPage = () => {
                 to="#"
                 className="btn btn-outline-secondary mt-3"
                 style={{ width: "50%" }}
+                onClick={handleAddToCart}
               >
                 Add to Cart
               </Link>
+              {alert.show && (
+                <div
+                  className={`alert alert-${alert.type} mt-3`}
+                  role="alert"
+                  style={{ width: "50%" }}
+                >
+                  {alert.message}
+                </div>
+              )}
             </div>
           ) : (
             <div className="mt-3 mb-3">
@@ -196,7 +253,7 @@ export const ProductCheckoutPage = () => {
           )}
 
           <p>Material: {product?.material}</p>
-          <p>Form: {product?.size}</p>
+          <p>Form: {product?.form}</p>
           <p>Color: {product?.color}</p>
           <p>Gender: {product?.gender}</p>
           <p>Stock: {product?.stock}</p>
