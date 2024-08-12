@@ -41,7 +41,7 @@ export const ReturnDisplayProduct: React.FC<{
           className="card-text text-body-secondary"
           style={{ fontSize: "20px" }}
         >
-          {props.product.price}$
+          ${props.product.price.toFixed(2)}
         </p>
       </div>
     </div>

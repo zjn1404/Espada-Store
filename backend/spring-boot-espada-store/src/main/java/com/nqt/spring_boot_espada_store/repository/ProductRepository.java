@@ -25,4 +25,6 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     Page<Product> findAllBySubtype(Subtype subtype, Pageable pageable);
 
     Page<Product> findProductsByNameContaining(String search, Pageable pageable);
+
+    Page<Product> findProductsById(String id, Pageable pageable);
 }

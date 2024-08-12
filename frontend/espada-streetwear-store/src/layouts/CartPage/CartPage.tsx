@@ -45,7 +45,6 @@ export const CartPage = () => {
     } catch (error) {
       console.error("Failed to fetch cart items:", error);
     }
-    console.log(cartItems)
   };
 
   useEffect(() => {
@@ -107,6 +106,15 @@ export const CartPage = () => {
     }
   };
 
+  // Calculate the total price of all items in the cart
+  const totalPrice = cartItems.reduce((total, item) => {
+    const itemTotal = item.cartDetails.reduce(
+      (sum, detail) => sum + item.product.price * detail.quantity,
+      0
+    );
+    return total + itemTotal;
+  }, 0);
+
   return (
     <div className="container mt-5">
       <h1 className="mb-5">
@@ -140,6 +148,7 @@ export const CartPage = () => {
                       <div>
                         <h5 className="card-title mb-0">{item.product.name}</h5>
                         <p className="mb-0">Size: {detail.cartDetailId.size}</p>
+                        <p className="mb-0">Price: ${item.product.price.toFixed(2)}</p>
                       </div>
                     </div>
                     <div className="col-md-3 d-flex align-items-center">
@@ -218,6 +227,18 @@ export const CartPage = () => {
             )
           )
         )}
+      </div>
+
+      <div className="mt-5 d-flex justify-content-between">
+        <h4>
+          <strong>Estimated Total:</strong> ${totalPrice.toFixed(2)}
+        </h4>
+        <button
+          className="btn btn-dark btn-lg"
+          disabled={cartItems.length === 0 || loading}
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );

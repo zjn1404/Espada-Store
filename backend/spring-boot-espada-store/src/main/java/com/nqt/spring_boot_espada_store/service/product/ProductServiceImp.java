@@ -155,7 +155,13 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductResponse> getProductsBySearch(String input, PageRequest request) {
-        return productRepository.findProductsByNameContaining(input, request).map(productMapper::toProductResponse);
+        Page<Product> page = productRepository.findProductsByNameContaining(input, request);
+
+        if (page.getContent().isEmpty()) {
+            page = productRepository.findProductsById((input), request);
+        }
+
+        return page.map(productMapper::toProductResponse);
     }
 
     @Override

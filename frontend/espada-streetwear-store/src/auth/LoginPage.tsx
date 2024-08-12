@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./sign-in.css";
-import { Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState("");
@@ -88,13 +88,12 @@ export const LoginPage = () => {
           Sign in
         </button>
         <div className="text-center mb-5">
-          <a
-            href="sign-up.jsp"
+          <Link to="/sign-up/user"
             className="text-body-secondary"
             style={{ textDecoration: "none" }}
           >
             Sign up a new account
-          </a>
+          </Link>
         </div>
       </form>
       {error && (

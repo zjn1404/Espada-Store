@@ -51,13 +51,4 @@ public class CartDetail {
     public int hashCode() {
         return Objects.hashCode(getCartDetailId());
     }
-
-    @Override
-    public String toString() {
-        return "CartDetail{" +
-                "cartDetailId=" + cartDetailId +
-                ", quantity=" + quantity +
-                ", cart=" + cart +
-                '}';
-    }
 }

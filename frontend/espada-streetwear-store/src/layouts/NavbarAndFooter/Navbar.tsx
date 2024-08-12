@@ -3,11 +3,13 @@ import userLogo from "../../img/logo/user-logo.jpeg";
 import logo from "../../img/logo/espada.png";
 import { NavLink, useHistory } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../auth/utils/AuthContext";
 
 export const Navbar = () => {
   // State to manage user login status
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchInput, setSearchInput] = useState("");
+  const role = useAuth().role;
   const history = useHistory();
 
   const handleSearchSubmit = (event: { preventDefault: () => void }) => {
@@ -204,14 +206,16 @@ export const Navbar = () => {
                 />
               </a>
               <ul className="dropdown-menu">
-                <li>
-                  <NavLink
-                    className="dropdown-item text-body-secondary"
-                    to="/cart"
-                  >
-                    Cart
-                  </NavLink>
-                </li>
+                {role?.includes("USER") && (
+                  <li>
+                    <NavLink
+                      className="dropdown-item text-body-secondary"
+                      to="/cart"
+                    >
+                      Cart
+                    </NavLink>
+                  </li>
+                )}
                 <li>
                   <NavLink
                     className="dropdown-item text-body-secondary"

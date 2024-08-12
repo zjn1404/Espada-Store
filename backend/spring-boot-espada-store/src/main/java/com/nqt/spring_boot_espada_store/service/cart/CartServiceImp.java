@@ -12,8 +12,6 @@ import com.nqt.spring_boot_espada_store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CartServiceImp implements CartService{
 
-    private static final Logger log = LoggerFactory.getLogger(CartServiceImp.class);
     CartRepository cartRepository;
     CartDetailRepository cartDetailRepository;
     UserRepository userRepository;
@@ -84,17 +81,12 @@ public class CartServiceImp implements CartService{
         User user = getUser();
         Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId)
                         .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_EXISTED));
+
+        CartDetailId cartDetailId = new CartDetailId(cart.getId(), size);
+        cartDetailRepository.deleteById(cartDetailId);
+
         if (cart.getCartDetails() == null || cart.getCartDetails().isEmpty()) {
             cartRepository.deleteById(cart.getId());
-        } else {
-            CartDetailId cartDetailId = new CartDetailId(cart.getId(), size);
-            cart.getCartDetails().remove(new CartDetail(cartDetailId));
-            cartDetailRepository.deleteById(cartDetailId);
-            cartRepository.saveAndFlush(cart);
-
-            if (cart.getCartDetails() == null || cart.getCartDetails().isEmpty()) {
-                cartRepository.deleteById(cart.getId());
-            }
         }
     }
 

@@ -7,6 +7,7 @@ import { DisplayProduct } from "../ProductsPage/DisplayProducts";
 import { StarsReview } from "../Utils/StarReview";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../auth/utils/AuthContext";
 
 export const ProductCheckoutPage = () => {
   const [product, setProduct] = useState<ProductModel>();
@@ -15,6 +16,7 @@ export const ProductCheckoutPage = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [alert, setAlert] = useState({ show: false, type: "", message: "" });
+  const role = useAuth().role;
 
   const productId = window.location.pathname.split("/")[2];
   const bestSellerUrl = `http://localhost:8080/api/product/subtype/${product?.subtype}`;
@@ -175,7 +177,7 @@ export const ProductCheckoutPage = () => {
           >
             <strong>{product?.name}</strong>
           </h2>
-          <h3>{product?.price}$</h3>
+          <h3>${product?.price.toFixed(2)}</h3>
 
           <div className="mt-3">
             <p style={{ fontSize: "1.2rem" }}>Size:</p>
@@ -222,14 +224,16 @@ export const ProductCheckoutPage = () => {
           </div>
           {localStorage.getItem("accessToken") ? (
             <div className="mt-3 mb-3">
-              <Link
-                to="#"
-                className="btn btn-outline-secondary mt-3"
-                style={{ width: "50%" }}
-                onClick={handleAddToCart}
-              >
-                Add to Cart
-              </Link>
+              {role?.includes("USER") && (
+                <Link
+                  to="#"
+                  className="btn btn-outline-secondary mt-3"
+                  style={{ width: "50%" }}
+                  onClick={handleAddToCart}
+                >
+                  Add to Cart
+                </Link>
+              )}
               {alert.show && (
                 <div
                   className={`alert alert-${alert.type} mt-3`}

@@ -1,7 +1,9 @@
 package com.nqt.spring_boot_espada_store.configuration;
 
 import com.nqt.spring_boot_espada_store.entity.Role;
+import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.repository.RoleRepository;
+import com.nqt.spring_boot_espada_store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,6 +13,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -18,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationInitConfig {
 
     RoleRepository roleRepository;
+    UserRepository userRepository;
 
     @Bean
     @ConditionalOnProperty(
@@ -32,10 +38,20 @@ public class ApplicationInitConfig {
                         .name("ADMIN")
                         .build();
                 roleRepository.save(adminRole);
+
+                User admin = User.builder()
+                        .id("admin")
+                        .username("admin")
+                        .password("adminInit123")
+                        .email("admin@admin.com")
+                        .phoneNumber("0123456789")
+                        .roles(Set.of(adminRole))
+                        .firstName("Admin")
+                        .lastName("Admin")
+                        .build();
+
+                userRepository.save(admin);
             }
         };
     }
-
-
-
 }
