@@ -14,6 +14,7 @@ export const DisplayProduct: React.FC<{
   const [httpError, setHttpError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12);
+  const [displayedBestSellerAmount] = useState(8);
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -23,6 +24,8 @@ export const DisplayProduct: React.FC<{
 
       if (props.baseUrl.search("search") !== -1) {
         url = `${props.baseUrl}&page=${currentPage - 1}&size=${productsPerPage}`;
+      } else if (props.baseUrl.search("best-seller") !== -1) {
+        url = `${props.baseUrl}?page=${currentPage - 1}&size=${displayedBestSellerAmount}`;
       } else {
         url = `${props.baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
       }

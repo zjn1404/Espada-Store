@@ -68,4 +68,14 @@ public class CartController {
                 .message("Delete product successfully")
                 .build();
     }
+
+    @DeleteMapping("/delete-all")
+    public ApiResponse<Object> deleteAllCarts() {
+        cartService.deleteAllItemsFromCart();
+
+        return ApiResponse.builder()
+                .code(SUCCESS_REQUEST_CODE)
+                .message("Delete all products successfully")
+                .build();
+    }
 }

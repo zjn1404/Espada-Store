@@ -28,6 +28,7 @@ import { VerifySuccessPage } from "./auth/VerifySuccessPage";
 import { ChangePasswordPage } from "./auth/ChangePasswordPage";
 import { UpdateInformationPage } from "./auth/UpdateInformationPage";
 import { CartPage } from "./layouts/CartPage/CartPage";
+import { CheckOutPage } from "./layouts/Checkout/CheckOutPage";
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -100,7 +101,10 @@ function App() {
           <Route path="/change-password" component={ChangePasswordPage} />
           <Route path="/update-info" component={UpdateInformationPage} />
           {/* END USER */}
+          {/* CHECK OUT */}
           <Route path="/cart" component={CartPage} />
+          <Route path="/check-out" component={CheckOutPage} />
+          {/* END CHECK OUT */}
           {/* ADMIN */}
           {/* END ADMIN */}
         </Switch>

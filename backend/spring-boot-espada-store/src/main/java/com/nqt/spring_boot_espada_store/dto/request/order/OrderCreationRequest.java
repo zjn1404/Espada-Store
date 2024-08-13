@@ -1,6 +1,7 @@
 package com.nqt.spring_boot_espada_store.dto.request.order;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,9 @@ import java.util.Map;
 public class OrderCreationRequest {
 
     String deliveryAddress;
+
+    @Size(min = 10, max = 10)
+    String phoneNumber;
 
     @Min(value = 0, message = "PAYMENT_INVALID")
     Double payment;

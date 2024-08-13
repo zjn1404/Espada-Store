@@ -24,6 +24,9 @@ public class Order {
     @Column(name = "delivery_address")
     String deliveryAddress;
 
+    @Column(name = "phone_number")
+    String phoneNumber;
+
     @Column(name = "state")
     String state;
 

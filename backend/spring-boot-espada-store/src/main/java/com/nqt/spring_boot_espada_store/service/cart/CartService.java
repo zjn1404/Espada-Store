@@ -12,6 +12,8 @@ public interface CartService {
 
     void removeItemFromCart(String productId, String size);
 
+    void deleteAllItemsFromCart();
+
     List<CartResponse> getMyCart();
 
 }

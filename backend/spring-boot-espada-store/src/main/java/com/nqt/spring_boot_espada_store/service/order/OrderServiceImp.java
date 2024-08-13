@@ -18,7 +18,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -113,14 +115,14 @@ public class OrderServiceImp implements OrderService{
     }
 
     @Override
-    public List<ProductResponse> getBestSellers(Pageable pageable) {
+    public Page<ProductResponse> getBestSellers(Pageable pageable) {
         Page<String> bestSellerIds = orderDetailRepository.findTop8BestSellers(pageable);
         List<ProductResponse> bestSellers = new ArrayList<>();
         bestSellerIds.forEach(bestSellerId ->
                 bestSellers.add(productMapper.toProductResponse(productRepository.findById(bestSellerId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED)))));
 
-        return bestSellers;
+        return new PageImpl<>(bestSellers);
     }
 
     @Override

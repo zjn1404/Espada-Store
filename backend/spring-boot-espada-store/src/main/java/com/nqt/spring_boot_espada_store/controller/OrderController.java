@@ -10,6 +10,9 @@ import com.nqt.spring_boot_espada_store.service.order.OrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,10 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderController {
+
+    @NonFinal
+    @Value("${page-size-default.best-seller}")
+    int BESTSELLER_DISPLAYED_AMOUNT;
 
     OrderService orderService;
 
@@ -61,10 +68,14 @@ public class OrderController {
     }
 
     @GetMapping("/best-seller")
-    public ApiResponse<List<ProductResponse>> getBestSellerOrders(@RequestParam("productAmount") int productAmount) {
-        List<ProductResponse> productResponses = orderService.getBestSellers(PageRequest.of(0, productAmount));
+    public ApiResponse<Page<ProductResponse>> getBestSellerOrders(@RequestParam(value = "page", required = false) Integer offset,
+                                                                  @RequestParam(value = "size", required = false) Integer pageSize
+                                                                  ) {
 
-        return new ApiResponse<>(productResponses);
+        if(null == offset) offset = 0;
+        if(null == pageSize) pageSize = BESTSELLER_DISPLAYED_AMOUNT;
+
+        return new ApiResponse<>(orderService.getBestSellers(PageRequest.of(offset, pageSize)));
     }
 
     @GetMapping("/order-detail/{orderId}")

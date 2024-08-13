@@ -22,7 +22,7 @@ public interface OrderService {
 
     List<OrderResponse> getAllOrder();
 
-    List<ProductResponse> getBestSellers(Pageable pageable);
+    Page<ProductResponse> getBestSellers(Pageable pageable);
 
     List<OrderDetailResponse> getOrderDetails(String orderId);
 

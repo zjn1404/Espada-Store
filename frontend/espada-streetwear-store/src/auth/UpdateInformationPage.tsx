@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios, { AxiosResponse } from "axios";
 import "./sign-in.css";
-import { useHistory, useParams } from "react-router-dom";
 import { decodeJwt } from "./utils/auth";
 
 export const UpdateInformationPage = () => {
@@ -14,35 +13,68 @@ export const UpdateInformationPage = () => {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [dob, setDob] = useState("");
   const [registerToGetMail, setRegisterToGetMail] = useState(false);
-  const [error, setError] = useState<string | null>("");
+  const [error, setError] = useState<string | null>(null);
 
   let response: AxiosResponse<any, any>;
-  const role = decodeJwt(localStorage.getItem("accessToken")!)?.scope.includes("ADMIN") ? "ADMIN" : "USER";
+  const role = decodeJwt(localStorage.getItem("accessToken")!)?.scope.includes(
+    "ADMIN"
+  )
+    ? "ADMIN"
+    : "USER";
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userResponse = await axios.get("http://localhost:8080/api/user/my-info", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
+
+        const userData = userResponse.data.result;
+        setEmail(userData.email);
+        setPhoneNumber(userData.phoneNumber);
+        setFirstName(userData.firstName);
+        setLastName(userData.lastName);
+
+        if (role === "USER") {
+          const customerResponse = await axios.get(
+            "http://localhost:8080/api/customer-info",
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+
+          const customerData = customerResponse.data.result;
+          setGender(customerData.gender);
+          setAddress(customerData.address);
+          setDeliveryAddress(customerData.deliveryAddress);
+          setDob(customerData.dob.substring(0, 10));
+          setRegisterToGetMail(customerData.registerToGetMail);
+        }
+
+        setError("");
+      } catch (err: any) {
+        setError("Failed to fetch user data");
+      }
+    };
+
+    fetchUserData();
+  }, [role]);
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      response = await axios.put("http://localhost:8080/api/user", {
-        email,
-        phoneNumber,
-        firstName,
-        lastName,
-        roles: [role],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      }
-    );
-
-      if (role === "USER") {
-        await axios.put("http://localhost:8080/api/customer-info", {
-          gender,
-          address,
-          deliveryAddress,
-          dob,
-          registerToGetMail,
+      response = await axios.put(
+        "http://localhost:8080/api/user",
+        {
+          email,
+          phoneNumber,
+          firstName,
+          lastName,
+          roles: [role],
         },
         {
           headers: {
@@ -50,6 +82,23 @@ export const UpdateInformationPage = () => {
           },
         }
       );
+
+      if (role === "USER") {
+        await axios.put(
+          "http://localhost:8080/api/customer-info",
+          {
+            gender,
+            address,
+            deliveryAddress,
+            dob,
+            registerToGetMail,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
       }
 
       setError(null);
@@ -217,7 +266,11 @@ export const UpdateInformationPage = () => {
           </div>
         </form>
       </div>
-      {error === null && <p className="mb-5 text-success text-center">Change Information Successfully</p>}
+      {error === null && (
+        <p className="mb-5 text-success text-center">
+          Change Information Successfully
+        </p>
+      )}
       <hr />
     </div>
   );

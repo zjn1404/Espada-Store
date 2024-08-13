@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export const CartPage = () => {
   const [cartItems, setCartItems] = useState<
@@ -45,6 +46,24 @@ export const CartPage = () => {
     } catch (error) {
       console.error("Failed to fetch cart items:", error);
     }
+  };
+
+  const buildProductSizeQuantityJson = () => {
+    const productSizeQuantity: {
+      [productId: string]: { [size: string]: number };
+    } = {};
+
+    cartItems.forEach((item) => {
+      item.cartDetails.forEach((detail) => {
+        if (!productSizeQuantity[item.product.id]) {
+          productSizeQuantity[item.product.id] = {};
+        }
+        productSizeQuantity[item.product.id][detail.cartDetailId.size] =
+          detail.quantity;
+      });
+    });
+
+    return productSizeQuantity;
   };
 
   useEffect(() => {
@@ -148,7 +167,9 @@ export const CartPage = () => {
                       <div>
                         <h5 className="card-title mb-0">{item.product.name}</h5>
                         <p className="mb-0">Size: {detail.cartDetailId.size}</p>
-                        <p className="mb-0">Price: ${item.product.price.toFixed(2)}</p>
+                        <p className="mb-0">
+                          Price: ${item.product.price.toFixed(2)}
+                        </p>
                       </div>
                     </div>
                     <div className="col-md-3 d-flex align-items-center">
@@ -228,18 +249,25 @@ export const CartPage = () => {
           )
         )}
       </div>
-
-      <div className="mt-5 d-flex justify-content-between">
-        <h4>
-          <strong>Estimated Total:</strong> ${totalPrice.toFixed(2)}
-        </h4>
-        <button
-          className="btn btn-dark btn-lg"
-          disabled={cartItems.length === 0 || loading}
-        >
-          Checkout
-        </button>
-      </div>
+      {cartItems.length > 0 && (
+        <div className="mt-5 d-flex justify-content-between">
+          <h4>
+            <strong>Estimated Total:</strong> ${totalPrice.toFixed(2)}
+          </h4>
+          <Link
+            to={{
+              pathname: "/check-out",
+              state: {
+                productSizeQuantity: buildProductSizeQuantityJson(),
+                payment: totalPrice,
+              },
+            }}
+            className="btn btn-dark btn-lg"
+          >
+            Checkout
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

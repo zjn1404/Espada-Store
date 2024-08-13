@@ -16,6 +16,8 @@ public class OrderResponse {
 
     String deliveryAddress;
 
+    String phoneNumber;;
+
     String state;
 
     double payment;
