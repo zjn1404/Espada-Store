@@ -3,12 +3,14 @@ package com.nqt.spring_boot_espada_store.service.product;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
+import com.nqt.spring_boot_espada_store.entity.OrderDetail;
 import com.nqt.spring_boot_espada_store.entity.Product;
 import com.nqt.spring_boot_espada_store.entity.Subtype;
 import com.nqt.spring_boot_espada_store.entity.Type;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.ProductMapper;
+import com.nqt.spring_boot_espada_store.repository.OrderDetailRepository;
 import com.nqt.spring_boot_espada_store.repository.ProductRepository;
 import com.nqt.spring_boot_espada_store.repository.SubtypeRepository;
 import com.nqt.spring_boot_espada_store.repository.TypeRepository;
@@ -36,6 +38,7 @@ public class ProductServiceImp implements ProductService {
     ProductRepository productRepository;
     SubtypeRepository subtypeRepository;
     TypeRepository typeRepository;
+    OrderDetailRepository orderDetailRepository;
 
     ProductMapper productMapper;
 
@@ -166,6 +169,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public void deleteProduct(String id) {
+        List<OrderDetail> orderDetails = orderDetailRepository.findAllByProductId(id);
+        orderDetailRepository.deleteAll(orderDetails);
         productRepository.deleteById(id);
     }
 }

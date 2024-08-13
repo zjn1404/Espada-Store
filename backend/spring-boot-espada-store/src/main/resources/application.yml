@@ -36,11 +36,3 @@ verify-code:
   valid-duration: 300 # in second
 
 success-request-code: 1000
-
-order:
-  state:
-    waiting-confirm: "waiting-confirm"
-    preparing: "preparing"
-    shipping: "shipping"
-    to-customer: "to-customer"
-    delivered: "delivered"

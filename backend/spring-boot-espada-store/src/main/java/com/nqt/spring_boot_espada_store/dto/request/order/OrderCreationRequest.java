@@ -21,8 +21,5 @@ public class OrderCreationRequest {
     Boolean paymentState;
 
 //    OrderDetail
-    Map<String, String > productSize; // maybe can't be mapped
-
-    @Min(value = 1, message = "QUANTITY_INVALID")
-    Integer quantity;
+    Map<String, Map<String, Integer>> productSizeQuantity; // maybe can't be mapped
 }

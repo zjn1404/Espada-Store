@@ -9,9 +9,7 @@ import java.util.Objects;
 @Entity(name = "order_detail")
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderDetail {
 
@@ -41,6 +39,13 @@ public class OrderDetail {
 
     @Column(name = "quantity")
     int quantity;
+
+    public OrderDetail(Order order, Product product, String size, int quantity) {
+        this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.id = new OrderDetailId(order.getId(), product.getId(), size);
+    }
 
     @Override
     public boolean equals(Object o) {

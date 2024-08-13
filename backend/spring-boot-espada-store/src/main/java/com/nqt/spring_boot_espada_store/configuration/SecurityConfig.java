@@ -27,7 +27,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**", "/type/**", "/subtype/**", "/verify/**"
+            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller",
     };
 
     @Bean
@@ -35,24 +35,18 @@ public class SecurityConfig {
 
         http.addFilterBefore(exceptionHandler, LogoutFilter.class);
 
-        http.authorizeHttpRequests(configurer -> {
-            configurer
-                    .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS)
-                    .permitAll()
-                    .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated();
-        });
+        http.authorizeHttpRequests(configurer -> configurer
+                .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS)
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS)
+                .permitAll()
+                .anyRequest()
+                .authenticated());
 
-        http.oauth2ResourceServer(configurer -> {
-            configurer
-                    .jwt(jwtConfigurer -> {
-                        jwtConfigurer.decoder(customJwtDecoder)
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter());
-                    })
-                    .authenticationEntryPoint(new JwtAuthenticationEntryPoint());
-        });
+        http.oauth2ResourceServer(configurer -> configurer
+                .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 
         http.csrf(AbstractHttpConfigurer::disable);
 

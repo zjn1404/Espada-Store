@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.Date;
 import java.util.Set;
 
-@Entity(name = "order")
+@Entity(name = "`order`")
 @Getter
 @Setter
 @NoArgsConstructor
