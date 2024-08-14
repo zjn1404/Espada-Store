@@ -18,12 +18,15 @@ export const UpdateOrderPage = () => {
     "SHIPPING",
     "TO_CUSTOMER",
     "DELIVERED",
+    "RETURNED"
   ];
 
   const [orderId] = useState(param.orderId);
   const [state, setState] = useState(STATE_CHOICES[0]);
   const [paymentState, setPaymentState] = useState(param.paymentState);
-  const [shippingDate, setShippingDate] = useState(param.shippingDate);
+  const [shippingDate, setShippingDate] = useState(
+    param.shippingDate ? param.shippingDate.toString().substring(0, 10) : ""
+  );
   const [err, setError] = useState<string | null>("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -91,9 +94,7 @@ export const UpdateOrderPage = () => {
             id="paymentState"
             className="form-check-input"
             checked={paymentState}
-            onChange={(e) =>
-              setPaymentState(e.target.checked ? true : false)
-            }
+            onChange={(e) => setPaymentState(e.target.checked)}
           />
           <label htmlFor="paymentState" className="form-check-label">
             Paid
@@ -108,10 +109,8 @@ export const UpdateOrderPage = () => {
           type="date"
           id="shippingDate"
           className="form-control"
-          value={
-            shippingDate ? shippingDate.toString().substring(0, 10) : ""
-          }
-          onChange={(e) => setShippingDate(new Date(e.target.value))}
+          value={shippingDate}
+          onChange={(e) => setShippingDate(e.target.value)}
         />
       </div>
       <button className="btn btn-secondary" onClick={handleUpdateOrder}>
@@ -124,7 +123,7 @@ export const UpdateOrderPage = () => {
           </p>
           <Link
             className="d-flex justify-content-center"
-            style={{ textDecoration: "NONE" }}
+            style={{ textDecoration: "none" }}
             to="/home"
           >
             <p className="text-secondary">Back to Home</p>

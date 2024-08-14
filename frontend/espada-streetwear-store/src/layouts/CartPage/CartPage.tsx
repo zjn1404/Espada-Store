@@ -125,7 +125,6 @@ export const CartPage = () => {
     }
   };
 
-  // Calculate the total price of all items in the cart
   const totalPrice = cartItems.reduce((total, item) => {
     const itemTotal = item.cartDetails.reduce(
       (sum, detail) => sum + item.product.price * detail.quantity,

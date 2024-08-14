@@ -32,6 +32,7 @@ import { CheckOutPage } from "./layouts/Checkout/CheckOutPage";
 import { MyOrderPage } from "./layouts/Checkout/MyOrderPage";
 import { OrderManagementPage } from "./admin/OrderManagementPage";
 import { UpdateOrderPage } from "./admin/UpdateOrderPage";
+import { OrderDetailsPage } from "./admin/OrderDetailsPage";
 
 
 function App() {
@@ -116,6 +117,7 @@ function App() {
           {/* ADMIN */}
           <Route path="/admin/order" component={OrderManagementPage} />
           <Route path="/update-order" component={UpdateOrderPage} />
+          <Route path="/order-details" component={OrderDetailsPage} />
           {/* END ADMIN */}
         </Switch>
         <Footer />

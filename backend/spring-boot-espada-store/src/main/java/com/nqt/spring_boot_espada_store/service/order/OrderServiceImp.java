@@ -14,6 +14,7 @@ import com.nqt.spring_boot_espada_store.repository.OrderDetailRepository;
 import com.nqt.spring_boot_espada_store.repository.OrderRepository;
 import com.nqt.spring_boot_espada_store.repository.ProductRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,8 @@ public class OrderServiceImp implements OrderService{
         PREPARING("preparing"),
         SHIPPING("shipping"),
         TO_CUSTOMER("to-customer"),
-        DELIVERED("delivered")
+        DELIVERED("delivered"),
+        RETURNED("returned"),
         ;
 
         final String status;
@@ -55,6 +58,7 @@ public class OrderServiceImp implements OrderService{
     ProductMapper productMapper;
 
     @Override
+    @Transactional
     public OrderResponse createOrder(OrderCreationRequest request) {
         User user = getUser();
 
@@ -77,23 +81,47 @@ public class OrderServiceImp implements OrderService{
         for (Map.Entry<String, Map<String, Integer>> entry : productSizeQuantity.entrySet()) {
             String productId = entry.getKey();
             Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+            AtomicInteger quantity = new AtomicInteger();
             entry.getValue().forEach((key, value) -> {
                 OrderDetail orderDetail = new OrderDetail(order, product, key, value);
+                quantity.addAndGet(value);
                 orderDetailRepository.save(orderDetail);
                 orderDetails.add(orderDetail);
             });
+            product.setStock(product.getStock() - quantity.get());
+            productRepository.saveAndFlush(product);
         }
         return orderDetails;
     }
 
     @Override
+    @Transactional
     public OrderResponse updateOrder(String orderId, OrderUpdateRequest request) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
         orderMapper.updateOrder(order, request);
         String state = ORDER_STATE.valueOf(request.getState()).status;
         order.setState(state);
-
+        if (order.getState().equals(ORDER_STATE.RETURNED.status)) {
+            handleReturnedOrder(order.getOrderDetails());
+        }
         return orderMapper.toOrderResponse(orderRepository.save(order));
+    }
+
+    private void handleReturnedOrder(Set<OrderDetail> orderDetails) {
+        Map<String, Integer> productAndQuantity = new HashMap<>();
+        for (OrderDetail orderDetail : orderDetails) {
+            String productId = orderDetail.getProduct().getId();
+            int quantity = productAndQuantity.getOrDefault(productId, 0);
+            productAndQuantity.put(productId, quantity + orderDetail.getQuantity());
+        }
+
+        for (Map.Entry<String, Integer> entry : productAndQuantity.entrySet()) {
+            String productId = entry.getKey();
+            int quantity = entry.getValue();
+            Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+            product.setStock(product.getStock() + quantity);
+            productRepository.saveAndFlush(product);
+        }
     }
 
     @Override
