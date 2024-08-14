@@ -1,5 +1,5 @@
 import axios from "axios";
-import { refreshToken, parseJwt } from "../../auth/utils/auth"
+import { refresh, parseJwt } from "./auth"
 
 axios.interceptors.request.use(
   async (config) => {
@@ -8,7 +8,7 @@ axios.interceptors.request.use(
       const tokenExpiration = parseJwt(accessToken).exp * 1000;
       const now = new Date().getTime();
       if (now >= tokenExpiration - 10 * 60 * 1000) {
-        accessToken = await refreshToken();
+        accessToken = await refresh();
       }
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

@@ -206,16 +206,36 @@ export const Navbar = () => {
                 />
               </a>
               <ul className="dropdown-menu">
-                {role?.includes("USER") && (
+                {role?.includes("USER") ? (
+                  <>
+                    <li>
+                      <NavLink
+                        className="dropdown-item text-body-secondary"
+                        to="/cart"
+                      >
+                        Cart
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        className="dropdown-item text-body-secondary"
+                        to="/my-order"
+                      >
+                        My Order
+                      </NavLink>
+                    </li>
+                  </>
+                ) : (
                   <li>
                     <NavLink
                       className="dropdown-item text-body-secondary"
-                      to="/cart"
+                      to="/admin/order"
                     >
-                      Cart
+                      Order Management
                     </NavLink>
                   </li>
-                )}
+                )
+              }
                 <li>
                   <NavLink
                     className="dropdown-item text-body-secondary"

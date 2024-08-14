@@ -12,23 +12,24 @@ export const CheckOutPage: React.FC<{}> = () => {
   const [paymentState, setPaymentState] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("Cash on delivery");
   const [error, setError] = useState<string | null>(null);
+  const [isOrdering, setIsOrdering] = useState(false);
+
   const location = useLocation();
   const param = (location.state || {}) as {
     productSizeQuantity: ProductSizeQuantity;
     payment: number;
   };
   const [productSizeQuantity, setProductSizeQuantity] =
-    useState<ProductSizeQuantity>(param.productSizeQuantity || null);
+    useState<ProductSizeQuantity>(param.productSizeQuantity || {});
   const payment = param.payment;
   let response: AxiosResponse<any, any>;
-  
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!productSizeQuantity) {
         return;
       }
-      
+
       try {
         const userResponse = await axios.get(
           "http://localhost:8080/api/user/my-info",
@@ -65,6 +66,9 @@ export const CheckOutPage: React.FC<{}> = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsOrdering(true); 
+
+
     try {
       response = await axios.post(
         "http://localhost:8080/api/order",
@@ -83,7 +87,7 @@ export const CheckOutPage: React.FC<{}> = () => {
       );
 
       if (response.data.code === 1000) {
-        axios.delete("http://localhost:8080/api/cart/delete-all", {
+        await axios.delete("http://localhost:8080/api/cart/delete-all", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
@@ -94,7 +98,7 @@ export const CheckOutPage: React.FC<{}> = () => {
       setError(null);
     } catch (err: any) {
       setError(err.response.data.message);
-    }
+    } 
   };
 
   return (
@@ -137,15 +141,14 @@ export const CheckOutPage: React.FC<{}> = () => {
               <div>
                 <h4>Payment: ${`${payment.toFixed(2)}`}</h4>
               </div>
-              {!productSizeQuantity && (
-                <input
-                  id="register-btn"
-                  type="submit"
-                  className="btn btn-secondary form-control"
-                  value="Order"
-                  name="order"
-                />
-              )}
+              <input
+                id="register-btn"
+                type="submit"
+                className="btn btn-secondary form-control"
+                value="Order"
+                name="order"
+                disabled={isOrdering}
+              />
             </div>
             <div className="col-sm-6">
               <h3>PAYMENT</h3>

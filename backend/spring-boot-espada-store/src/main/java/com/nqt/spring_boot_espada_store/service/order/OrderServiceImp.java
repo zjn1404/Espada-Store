@@ -20,7 +20,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -67,7 +66,9 @@ public class OrderServiceImp implements OrderService{
         order.setUser(user);
         order.setId(user.getId() + "-" + orderDate.toString().replaceAll(" ", "").trim());
         order.setOrderDetails(buildOrderDetails(order, request.getProductSizeQuantity()));
-
+        if (null == order.getOrderDetails() || order.getOrderDetails().isEmpty()) {
+            throw new AppException(ErrorCode.CART_NOT_EXISTED);
+        }
         return orderMapper.toOrderResponse(orderRepository.save(order));
     }
 

@@ -21,7 +21,7 @@ import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
 import { ShirtsPage } from "./layouts/ProductsPage/ShirtsPage";
 import { ProductCheckoutPage } from "./layouts/ProductCheckoutPage/ProductCheckoutPage";
 import { LoginPage } from "./auth/LoginPage";
-import { parseJwt, scheduleTokenRefresh } from "./auth/utils/auth";
+import { parseJwt, scheduleTokenRefresh, refresh } from "./auth/utils/auth";
 import { SignUpPage } from "./auth/SignUpPage";
 import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
 import { VerifySuccessPage } from "./auth/VerifySuccessPage";
@@ -29,6 +29,10 @@ import { ChangePasswordPage } from "./auth/ChangePasswordPage";
 import { UpdateInformationPage } from "./auth/UpdateInformationPage";
 import { CartPage } from "./layouts/CartPage/CartPage";
 import { CheckOutPage } from "./layouts/Checkout/CheckOutPage";
+import { MyOrderPage } from "./layouts/Checkout/MyOrderPage";
+import { OrderManagementPage } from "./admin/OrderManagementPage";
+import { UpdateOrderPage } from "./admin/UpdateOrderPage";
+
 
 function App() {
   const displayProductRef = useRef<HTMLDivElement>(null);
@@ -41,24 +45,27 @@ function App() {
 
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
     if (accessToken) {
-      const parsedToken = parseJwt(accessToken);
+      const parsedToken = accessToken ? parseJwt(accessToken) : null;
+      const parsedRefreshToken = refreshToken ? parseJwt(refreshToken) : null;
       if (parsedToken) {
         const tokenExpiration = parsedToken.exp * 1000;
+        const refreshTokenExpiration = parsedRefreshToken.exp * 1000;
         const now = new Date().getTime();
         if (now < tokenExpiration) {
           scheduleTokenRefresh(tokenExpiration - now);
+        } else if (now < refreshTokenExpiration) {
+          refresh();
         } else {
-          // Token is expired, prompt login
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = "/sign-in";
         }
       } else {
-        // Invalid token, prompt loginf
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        window.location.href = "/sign-in";
       }
     }
   }, []);
@@ -104,8 +111,11 @@ function App() {
           {/* CHECK OUT */}
           <Route path="/cart" component={CartPage} />
           <Route path="/check-out" component={CheckOutPage} />
+          <Route path="/my-order" component={MyOrderPage} />
           {/* END CHECK OUT */}
           {/* ADMIN */}
+          <Route path="/admin/order" component={OrderManagementPage} />
+          <Route path="/update-order" component={UpdateOrderPage} />
           {/* END ADMIN */}
         </Switch>
         <Footer />
