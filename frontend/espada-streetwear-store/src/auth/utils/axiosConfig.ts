@@ -8,6 +8,7 @@ axios.interceptors.request.use(
       const tokenExpiration = parseJwt(accessToken).exp * 1000;
       const now = new Date().getTime();
       if (now >= tokenExpiration - 10 * 60 * 1000) {
+        console.log("tokenExpiration", now);
         accessToken = await refresh();
       }
       config.headers.Authorization = `Bearer ${accessToken}`;

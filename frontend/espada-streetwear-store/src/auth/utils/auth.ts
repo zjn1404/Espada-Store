@@ -5,15 +5,31 @@ interface CustomJwtPayload extends JwtPayload {
   scope: string;
 }
 
+let isRefreshing = false;
+let failedRequestsQueue: Function[] = [];
+
 export const refresh = async (): Promise<string> => {
+  if (isRefreshing) {
+    return new Promise<string>((resolve) => {
+      failedRequestsQueue.push(resolve);
+    });
+  }
+
+  isRefreshing = true;
+
   try {
     const oldRefreshToken = localStorage.getItem("refreshToken");
     const response = await axios.post("http://localhost:8080/api/auth/refresh", {
       token: oldRefreshToken,
     });
+
     const tokens = response.data.result;
     localStorage.setItem("accessToken", tokens.accessToken);
     localStorage.setItem("refreshToken", tokens.refreshToken);
+
+    failedRequestsQueue.forEach((callback) => callback(tokens.accessToken));
+    failedRequestsQueue = [];
+    
     return tokens.accessToken;
   } catch (err: any) {
     if (err.response && err.response.data.code === 1008) {
@@ -21,13 +37,12 @@ export const refresh = async (): Promise<string> => {
       localStorage.removeItem("refreshToken");
       window.location.href = "/sign-in";
     }
+    failedRequestsQueue.forEach((callback) => callback(null));
+    failedRequestsQueue = [];
     throw err;
+  } finally {
+    isRefreshing = false;
   }
-};
-
-export const scheduleTokenRefresh = (expiresIn: number) => {
-  const refreshTime = expiresIn - 10 * 60 * 1000; // 20 minutes before expiry
-  setTimeout(() => refresh(), refreshTime);
 };
 
 export const parseJwt = (token: string): any => {

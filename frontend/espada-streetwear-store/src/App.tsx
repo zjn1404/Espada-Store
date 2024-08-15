@@ -21,7 +21,7 @@ import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
 import { ShirtsPage } from "./layouts/ProductsPage/ShirtsPage";
 import { ProductDetailPage } from "./layouts/ProductDetailPage/ProductDetailPage";
 import { LoginPage } from "./auth/LoginPage";
-import { parseJwt, scheduleTokenRefresh, refresh } from "./auth/utils/auth";
+import { parseJwt, refresh } from "./auth/utils/auth";
 import { SignUpPage } from "./auth/SignUpPage";
 import { SignUpSuccessPage } from "./auth/SignUpSuccessPage";
 import { VerifySuccessPage } from "./auth/VerifySuccessPage";
@@ -47,31 +47,46 @@ function App() {
   };
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (accessToken) {
-      const parsedToken = accessToken ? parseJwt(accessToken) : null;
-      const parsedRefreshToken = refreshToken ? parseJwt(refreshToken) : null;
-      if (parsedToken) {
-        const tokenExpiration = parsedToken.exp * 1000;
-        const refreshTokenExpiration = parsedRefreshToken.exp * 1000;
-        const now = new Date().getTime();
-        if (now < tokenExpiration) {
-          scheduleTokenRefresh(tokenExpiration - now);
-        } else if (now < refreshTokenExpiration) {
-          refresh();
-        } else {
+    const checkToken = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (accessToken && refreshToken) {
+        try {
+          const parsedToken = parseJwt(accessToken);
+          const tokenExpiration = parsedToken?.exp * 1000;
+          const now = new Date().getTime();
+
+          if (now >= tokenExpiration - 10 * 60 * 1000) {
+            await refresh();
+          }
+        } catch (error) {
+          console.error("Error during initial token check:", error);
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           window.location.href = "/sign-in";
         }
-      } else {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/sign-in";
       }
-    }
+    };
+
+    checkToken();
+
+    const intervalId = setInterval(async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        const parsedToken = parseJwt(accessToken);
+        const tokenExpiration = parsedToken?.exp * 1000;
+        const now = new Date().getTime();
+
+        if (now >= tokenExpiration - 10 * 60 * 1000) {
+          await refresh();
+        }
+      }
+    }, 30 * 60 * 1000); 
+    
+    return () => clearInterval(intervalId); 
   }, []);
+
 
   return (
     <Router>
