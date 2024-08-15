@@ -19,7 +19,7 @@ import { JacketsPage } from "./layouts/ProductsPage/JacketsPage";
 import { SkirtsPage } from "./layouts/ProductsPage/SkirtsPage";
 import { HoodiesPage } from "./layouts/ProductsPage/HoodiesPage";
 import { ShirtsPage } from "./layouts/ProductsPage/ShirtsPage";
-import { ProductCheckoutPage } from "./layouts/ProductCheckoutPage/ProductCheckoutPage";
+import { ProductDetailPage } from "./layouts/ProductDetailPage/ProductDetailPage";
 import { LoginPage } from "./auth/LoginPage";
 import { parseJwt, scheduleTokenRefresh, refresh } from "./auth/utils/auth";
 import { SignUpPage } from "./auth/SignUpPage";
@@ -33,6 +33,8 @@ import { MyOrderPage } from "./layouts/Checkout/MyOrderPage";
 import { OrderManagementPage } from "./admin/OrderManagementPage";
 import { UpdateOrderPage } from "./admin/UpdateOrderPage";
 import { OrderDetailsPage } from "./admin/OrderDetailsPage";
+import { UpdateProductDetailPage } from "./admin/UpdateProductDetailPage";
+import { ProductCreationPage } from "./admin/ProductCreationPage";
 
 
 function App() {
@@ -100,7 +102,7 @@ function App() {
           <Route path="/product/headwear" component={HeadwearPage} />
           <Route path="/product/search" component={SearchPage} />
           {/* END PRODUCT */}
-          <Route path="/checkout/:productId" component={ProductCheckoutPage} />
+          <Route path="/product/:productId" component={ProductDetailPage} />
           {/* USER */}
           <Route path="/sign-in" component={LoginPage} />
           <Route path="/sign-up/:role" component={SignUpPage} />
@@ -118,6 +120,8 @@ function App() {
           <Route path="/admin/order" component={OrderManagementPage} />
           <Route path="/update-order" component={UpdateOrderPage} />
           <Route path="/order-details" component={OrderDetailsPage} />
+          <Route path="/admin/product-detail/update/:productId" component={UpdateProductDetailPage} />
+          <Route path="/admin/product/create" component={ProductCreationPage}/>
           {/* END ADMIN */}
         </Switch>
         <Footer />

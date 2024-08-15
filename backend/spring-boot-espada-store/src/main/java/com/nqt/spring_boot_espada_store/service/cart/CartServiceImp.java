@@ -37,7 +37,9 @@ public class CartServiceImp implements CartService{
         User user = getUser();
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
-
+        if (quantity > product.getStock()) {
+            throw new AppException(ErrorCode.QUANTITY_GREATER_THAN_STOCK);
+        }
         Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId).orElse(new Cart(user, product));
         if (cart.getCartDetails() == null) {
             cart.setCartDetails(new HashSet<>());
@@ -61,6 +63,11 @@ public class CartServiceImp implements CartService{
     @Override
     public CartResponse updateItemInCart(String productId, int quantity, String size) {
         User user = getUser();
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+        if (quantity > product.getStock()) {
+            throw new AppException(ErrorCode.QUANTITY_GREATER_THAN_STOCK);
+        }
 
         Cart cart = cartRepository.findCartByUserIdAndProductId(user.getId(), productId)
                 .orElseThrow(() -> new AppException(ErrorCode.CART_NOT_EXISTED));

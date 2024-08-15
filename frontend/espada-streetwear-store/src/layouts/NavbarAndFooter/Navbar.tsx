@@ -139,6 +139,13 @@ export const Navbar = () => {
                 </li>
               </ul>
             </li>
+            {role?.includes("ADMIN") && (
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/admin/product/create">
+                  Add Product
+                </NavLink>
+              </li>
+            )}
             {!isLoggedIn && (
               <li className="nav-item dropdown">
                 <a

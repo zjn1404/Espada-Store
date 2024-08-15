@@ -11,10 +11,10 @@ export const refresh = async (): Promise<string> => {
     const response = await axios.post("http://localhost:8080/api/auth/refresh", {
       token: oldRefreshToken,
     });
-    const { accessToken, refreshToken } = response.data.result;
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    return accessToken;
+    const tokens = response.data.result;
+    localStorage.setItem("accessToken", tokens.accessToken);
+    localStorage.setItem("refreshToken", tokens.refreshToken);
+    return tokens.accessToken;
   } catch (err: any) {
     if (err.response && err.response.data.code === 1008) {
       localStorage.removeItem("accessToken");

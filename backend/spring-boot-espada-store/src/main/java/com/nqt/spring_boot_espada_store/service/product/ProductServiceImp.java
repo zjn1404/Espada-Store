@@ -17,8 +17,6 @@ import com.nqt.spring_boot_espada_store.repository.TypeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,6 @@ import java.util.Objects;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImp implements ProductService {
 
-    private static final Logger log = LoggerFactory.getLogger(ProductServiceImp.class);
     ProductRepository productRepository;
     SubtypeRepository subtypeRepository;
     TypeRepository typeRepository;
@@ -53,7 +50,7 @@ public class ProductServiceImp implements ProductService {
         try {
 
             byte[] img = null;
-            if (!Objects.isNull(request.getImage())) {
+            if (!Objects.isNull(request.getImage()) && !request.getImage().isEmpty()) {
                 img = request.getImage().getBytes();
             }
 
@@ -103,8 +100,10 @@ public class ProductServiceImp implements ProductService {
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
             productMapper.updateProduct(product, request);
 
-            String base64Img = Base64.getEncoder().encodeToString(img);
-            product.setImage(base64Img);
+            if (img != null) {
+                String base64Img = Base64.getEncoder().encodeToString(img);
+                product.setImage(base64Img);
+            }
 
             productRepository.saveAndFlush(product);
 

@@ -58,8 +58,4 @@ public class Product {
     })
     @JoinColumn(name = "subtype")
     Subtype subtype;
-
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    Set<Cart> carts;
 }
