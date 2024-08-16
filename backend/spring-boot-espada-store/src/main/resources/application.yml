@@ -22,6 +22,10 @@ spring:
           auth: true
           starttls:
             enable: true
+  task:
+    scheduling:
+      pool:
+        size: 3
 
 jwt:
   signerKey: "GF8bIi7ezOnrdsZvh1gt1sHc5E8KnJaybTf88q5GecpO4E6NhR0PENFaBM+ZEyVG"
