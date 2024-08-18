@@ -1,6 +1,6 @@
 package com.nqt.spring_boot_espada_store.service.verifycode;
 
-import com.nqt.spring_boot_espada_store.Utils;
+import com.nqt.spring_boot_espada_store.utils.Utils;
 import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.entity.VerifyCode;
 import com.nqt.spring_boot_espada_store.exception.AppException;

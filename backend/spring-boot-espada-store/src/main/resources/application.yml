@@ -41,3 +41,14 @@ verify-code:
   valid-duration: 300 # in second
 
 success-request-code: 1000
+
+payment:
+  vnpay:
+    version: 2.1.0
+    vnp_command: "pay"
+    tmn-code: "UA43J0W0"
+    secret-key: "ZAXWF5MTGRNIU2JE497F8PSNQOZ06YVK"
+    payment-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+    return-url: "http://localhost:8080/api/payment/vnpay/vnpay-return"
+    orderType: "other"
+    success-code: "00"

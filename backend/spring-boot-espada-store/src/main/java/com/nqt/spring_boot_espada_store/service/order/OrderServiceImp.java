@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderServiceImp implements OrderService{
 
-
     enum ORDER_STATE {
         DEFAULT_STATE("waiting-confirm"),
         PREPARING("preparing"),
@@ -99,8 +98,10 @@ public class OrderServiceImp implements OrderService{
     public OrderResponse updateOrder(String orderId, OrderUpdateRequest request) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
         orderMapper.updateOrder(order, request);
-        String state = ORDER_STATE.valueOf(request.getState()).status;
-        order.setState(state);
+        if (request.getState() != null) {
+            String state = ORDER_STATE.valueOf(request.getState()).status;
+            order.setState(state);
+        }
         if (order.getState().equals(ORDER_STATE.RETURNED.status)) {
             handleReturnedOrder(order.getOrderDetails());
         }

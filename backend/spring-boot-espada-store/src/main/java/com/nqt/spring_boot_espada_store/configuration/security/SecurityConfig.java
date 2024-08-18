@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.configuration;
+package com.nqt.spring_boot_espada_store.configuration.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller",
+            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller", "/payment/vnpay/vnpay-return"
     };
 
     @Bean

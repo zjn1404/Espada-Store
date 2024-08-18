@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 
-import com.nqt.spring_boot_espada_store.Utils;
+import com.nqt.spring_boot_espada_store.utils.Utils;
 import com.nqt.spring_boot_espada_store.entity.VerifyCode;
 import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
 import jakarta.mail.MessagingException;

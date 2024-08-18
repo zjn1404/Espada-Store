@@ -41,6 +41,7 @@ public enum ErrorCode {
     CART_DETAIL_NOT_EXISTED(1027, HttpStatus.BAD_REQUEST, "Cart Detail Not Existed"),
     ORDER_NOT_EXISTED(1028, HttpStatus.BAD_REQUEST, "Order Not Existed"),
     QUANTITY_GREATER_THAN_STOCK(1029, HttpStatus.BAD_REQUEST, "Quantity is greater than stock"),
+    PAYMENT_NOT_SUCCEED(1030, HttpStatus.BAD_REQUEST, "Payment Not Succeed"),
     ;
 
     final int code;

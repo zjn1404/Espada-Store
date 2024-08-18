@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store;
+package com.nqt.spring_boot_espada_store.utils;
 
 import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.entity.VerifyCode;

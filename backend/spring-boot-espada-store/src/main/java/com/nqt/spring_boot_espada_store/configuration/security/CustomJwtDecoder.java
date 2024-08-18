@@ -1,4 +1,4 @@
-package com.nqt.spring_boot_espada_store.configuration;
+package com.nqt.spring_boot_espada_store.configuration.security;
 
 import com.nqt.spring_boot_espada_store.dto.request.security.IntrospectRequest;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;

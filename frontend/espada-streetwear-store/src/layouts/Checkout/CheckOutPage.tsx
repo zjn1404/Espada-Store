@@ -7,14 +7,27 @@ interface ProductSizeQuantity {
 }
 
 export const CheckOutPage: React.FC<{}> = () => {
+  const PAYMENT_METHOD = [
+    "Cash On Delivery",
+    "NCB",
+    "VISA",
+    "MasterCard",
+    "JCB",
+  ];
+
+  const SUCCESS_CODE = 1000;
+  const USD_VND_EXCHANGE_RATE = 25000;
+
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paymentState, setPaymentState] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("Cash on delivery");
+  const [paymentMethod, setPaymentMethod] = useState("Cash On Delivery");
   const [error, setError] = useState<string | null>(null);
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
 
   const location = useLocation();
+
   const param = (location.state || {}) as {
     productSizeQuantity: ProductSizeQuantity;
     payment: number;
@@ -66,8 +79,7 @@ export const CheckOutPage: React.FC<{}> = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsOrdering(true); 
-
+    setIsOrdering(true);
 
     try {
       response = await axios.post(
@@ -86,19 +98,49 @@ export const CheckOutPage: React.FC<{}> = () => {
         }
       );
 
-      if (response.data.code === 1000) {
+      if (response.data.code === SUCCESS_CODE) {
         await axios.delete("http://localhost:8080/api/cart/delete-all", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
-      }
 
-      setProductSizeQuantity({});
-      setError(null);
+        setProductSizeQuantity({});
+        setError(null);
+      }
     } catch (err: any) {
       setError(err.response.data.message);
-    } 
+    } finally {
+      setIsOrdering(false);
+    }
+  };
+
+  const handlePayment = async () => {
+    setIsPaying(true);
+
+    if (paymentMethod === PAYMENT_METHOD[0]) {
+      setPaymentState(false);
+    } else {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/payment/vnpay/create-payment?amount=${payment*USD_VND_EXCHANGE_RATE}&bankCode=${paymentMethod}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }
+        );
+
+        if (response.data.code === SUCCESS_CODE) {
+          const paymentUrl = response.data.result.paymentUrl;
+          window.open(paymentUrl, "_blank");
+        } else {
+          setError("Payment failed! Please try again");
+        }
+      } catch (error) {
+        setError("An error occurred. Please try again");
+      }
+    }
   };
 
   return (
@@ -139,16 +181,26 @@ export const CheckOutPage: React.FC<{}> = () => {
                 />
               </div>
               <div>
-                <h4>Payment: ${`${payment.toFixed(2)}`}</h4>
+                <h4>Payment: ${payment ? `${payment.toFixed(2)}` : 0}</h4>
               </div>
-              <input
-                id="register-btn"
-                type="submit"
-                className="btn btn-secondary form-control"
-                value="Order"
-                name="order"
-                disabled={isOrdering}
-              />
+              {paymentMethod === PAYMENT_METHOD[0] || paymentState ? (
+                <input
+                  id="register-btn"
+                  type="submit"
+                  className="btn btn-secondary form-control"
+                  value="Order"
+                  name="order"
+                  disabled={isOrdering}
+                />
+              ) : (
+                <input
+                  className="btn btn-secondary form-control"
+                  type="submit"
+                  onClick={handlePayment}
+                  disabled={isOrdering}
+                  value="Pay For The Order"
+                />
+              )}
             </div>
             <div className="col-sm-6">
               <h3>PAYMENT</h3>
@@ -163,8 +215,11 @@ export const CheckOutPage: React.FC<{}> = () => {
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
-                  <option value="Cash on delivery">Cash on delivery</option>
-                  <option value="MoMo">MoMo</option>
+                  {PAYMENT_METHOD.map((method) => (
+                    <option key={method} value={method}>
+                      {method}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -181,7 +236,7 @@ export const CheckOutPage: React.FC<{}> = () => {
             style={{ textDecoration: "NONE" }}
             to="/home"
           >
-            <button className="btn btn-secondary ">Back to Home</button>
+            <button className="btn btn-secondary">Back to Home</button>
           </Link>
         </div>
       )}
