@@ -1,5 +1,6 @@
 package com.nqt.spring_boot_espada_store.utils;
 
+import com.nqt.spring_boot_espada_store.entity.Product;
 import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.entity.VerifyCode;
 import jakarta.mail.MessagingException;
@@ -14,11 +15,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -28,6 +29,10 @@ public class Utils {
     @NonFinal
     @Value("${verify-code.valid-duration}")
     int VERIFY_CODE_VALID_DURATION;
+
+    @NonFinal
+    @Value("${client.home-page}")
+    String CLIENT_HOME_PAGE;
 
     JavaMailSender mailSender;
 
@@ -55,6 +60,39 @@ public class Utils {
         mailContent += "<h3><a href=\""+ verifyUrl +"\">VERIFY</a></h3>";
         mailContent += "<p> Thank you! <br> The Espada Team <p>";
 
+        MimeMessage message = configMessage(user, sender, subject, mailContent);
+
+        mailSender.send(message);
+    }
+
+    public void sendNewProductNotification(User user, Product product) throws MessagingException, UnsupportedEncodingException {
+        String subject = "New Product Notification";
+        String sender = "Espada Team";
+
+        String dayOfWeek = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(Calendar.getInstance().getTime());
+
+        String mailContent = "<h2 style=\"color: #4CAF50;\">Say hello to " + product.getName() + " :)</h2>";
+        mailContent += "<p>Hey " +  user.getLastName() + " " + user.getFirstName() + ",</p>";
+        mailContent += "<p>Happy " + dayOfWeek + "! " + product.getName() + " is here at last, and we wanted to make sure you'd be the first to know.</p>";
+
+        mailContent += "<h3>Product Information</h3>";
+        mailContent += "<h4>" + product.getName() + "</h4>";
+        mailContent += "<p>Price: $" + product.getPrice() + "</p>";
+        mailContent += "<p>Material: " + product.getMaterial() + "</p>";
+        mailContent += "<p>Form: " + product.getForm() + "</p>";
+        mailContent += "<p>Color: " + product.getColor() + "</p>";
+        mailContent += "<p>Gender: " + product.getGender() + "</p>";
+        mailContent += "<p>Description: " + product.getDescription() + "</p>";
+
+        mailContent += "<p>You can order the product <a href=\"" + CLIENT_HOME_PAGE + "/product/" + product.getId() + "\" style=\"color: #4CAF50; text-decoration: none;\">here</a>.</p>";
+        mailContent += "<p>We look forward to seeing you wearing " + product.getName() + "!</p>";
+        mailContent += "<p>Thank you!<br>The Espada Team</p>";
+
+        MimeMessage message = configMessage(user, sender, subject, mailContent);
+        mailSender.send(message);
+    }
+
+    private MimeMessage configMessage(User user, String sender, String subject, String mailContent) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(message);
 
@@ -63,7 +101,6 @@ public class Utils {
         messageHelper.setSubject(subject);
         messageHelper.setText(mailContent, true);
 
-        mailSender.send(message);
+        return message;
     }
-
 }

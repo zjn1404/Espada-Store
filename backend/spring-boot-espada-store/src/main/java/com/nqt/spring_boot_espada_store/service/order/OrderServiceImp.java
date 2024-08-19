@@ -128,8 +128,9 @@ public class OrderServiceImp implements OrderService{
     @Override
     public List<OrderResponse> getMyOrders() {
         User user = getUser();
-
-        return orderRepository.findAllByUser(user).stream().map(orderMapper::toOrderResponse).toList();
+        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAllByUser(user).stream().map(orderMapper::toOrderResponse).toList());
+        orders.sort((d1, d2) -> d2.getOrderingDate().compareTo(d1.getOrderingDate()));
+        return orders;
     }
 
     @Override
@@ -141,7 +142,9 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public List<OrderResponse> getAllOrder() {
-        return orderRepository.findAll().stream().map(orderMapper::toOrderResponse).toList();
+        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAll().stream().map(orderMapper::toOrderResponse).toList());
+        orders.sort((d1, d2) -> d2.getOrderingDate().compareTo(d1.getOrderingDate()));
+        return orders;
     }
 
     @Override

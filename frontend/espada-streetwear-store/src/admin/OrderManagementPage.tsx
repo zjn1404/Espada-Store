@@ -12,8 +12,8 @@ export const OrderManagementPage = () => {
       state: String,
       payment: Number,
       paymentState: Boolean,
-      orderingDate: Date,
-      shippingDate: Date,
+      orderingDate: new Date(),
+      shippingDate: new Date(),
       userId: String,
     },
   ]);
@@ -29,7 +29,13 @@ export const OrderManagementPage = () => {
         },
       });
 
-      setOrders(response.data.result);
+      const formattedOrders = response.data.result.map((order: any) => ({
+        ...order,
+        orderingDate: new Date(order.orderingDate),
+        shippingDate: order.shippingDate ? new Date(order.shippingDate) : null,
+      }));
+
+      setOrders(formattedOrders);
     } catch (error: any) {
       setError(error.response.data.message);
     } finally {
@@ -59,6 +65,12 @@ export const OrderManagementPage = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const formatedTimestamp = (d: Date) => {
+    const date = d.toISOString().split("T")[0];
+    const time = d.toTimeString().split(" ")[0];
+    return `${date} ${time}`;
   };
 
   useEffect(() => {
@@ -102,7 +114,7 @@ export const OrderManagementPage = () => {
                 </div>
                 <div className="col-md-3 d-flex align-items-center">
                   <div>
-                    <p className="mb-0">Payment: {`${item.payment}`}</p>
+                    <p className="mb-0">Payment: ${`${item.payment}`}</p>
                     <p className="mb-0">
                       Payment state: {`${item.paymentState}`}
                     </p>
@@ -112,13 +124,13 @@ export const OrderManagementPage = () => {
                   <div>
                     <p className="mb-0">
                       Ordering Date:{" "}
-                      {`${item.orderingDate.toString().substring(0, 10)}`}
+                      {`${formatedTimestamp(item.orderingDate)}`}
                     </p>
                     <p className="mb-0">
                       Shipping Date:{" "}
                       {`${
                         item.shippingDate
-                          ? item.shippingDate.toString().substring(0, 10)
+                          ? item.shippingDate.toString().substring(0, 15)
                           : ""
                       }`}
                     </p>

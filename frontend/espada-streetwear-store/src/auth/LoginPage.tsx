@@ -67,20 +67,6 @@ export const LoginPage = () => {
           <label htmlFor="password">Password</label>
         </div>
 
-        <div className="form-check text-start my-3">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            value="remember-me"
-            id="flexCheckDefault"
-          />
-          <label
-            className="form-check-label text-body-secondary"
-            htmlFor="flexCheckDefault"
-          >
-            Remember me
-          </label>
-        </div>
         <button
           className="btn btn-primary w-100 py-2 btn-secondary mb-2"
           type="submit"

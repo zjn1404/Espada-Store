@@ -3,30 +3,30 @@ package com.nqt.spring_boot_espada_store.service.product;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
-import com.nqt.spring_boot_espada_store.entity.OrderDetail;
-import com.nqt.spring_boot_espada_store.entity.Product;
-import com.nqt.spring_boot_espada_store.entity.Subtype;
-import com.nqt.spring_boot_espada_store.entity.Type;
+import com.nqt.spring_boot_espada_store.entity.*;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.ProductMapper;
-import com.nqt.spring_boot_espada_store.repository.OrderDetailRepository;
-import com.nqt.spring_boot_espada_store.repository.ProductRepository;
-import com.nqt.spring_boot_espada_store.repository.SubtypeRepository;
-import com.nqt.spring_boot_espada_store.repository.TypeRepository;
+import com.nqt.spring_boot_espada_store.repository.*;
+import com.nqt.spring_boot_espada_store.utils.Utils;
+import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,9 +36,11 @@ public class ProductServiceImp implements ProductService {
     SubtypeRepository subtypeRepository;
     TypeRepository typeRepository;
     OrderDetailRepository orderDetailRepository;
+    UserRepository userRepository;
 
     ProductMapper productMapper;
 
+    Utils utils;
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest request) {
@@ -66,6 +68,10 @@ public class ProductServiceImp implements ProductService {
             product.setId(id);
 
             productRepository.save(product);
+
+            CompletableFuture.runAsync(() -> sendNewProductNotification(product));
+
+            log.info("After call sendNewProductNotification");
             return productMapper.toProductResponse(product);
 
         } catch (IOException ex) {
@@ -86,6 +92,19 @@ public class ProductServiceImp implements ProductService {
         builder.append(String.format("%d-%d", addedDate.getMonthValue(), addedDate.getYear()));
 
         return builder.toString();
+    }
+
+    public void sendNewProductNotification(Product product) {
+        log.info("Send new product notification");
+        List<User> users = userRepository.findAllByCustomerDetail_RegisterToGetMail(true);
+
+        users.forEach(user -> {
+            try {
+                utils.sendNewProductNotification(user, product);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override

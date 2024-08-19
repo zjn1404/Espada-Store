@@ -4,18 +4,18 @@ import React, { useEffect, useState } from "react";
 export const MyOrderPage = () => {
   const [orders, setOrders] = useState([
     {
-      id: String,
-      deliveryAddress: String,
-      phoneNumber: String,
-      state: String,
-      payment: Number,
-      paymentState: Boolean,
-      orderingDate: Date,
-      shippingDate: Date,
-      userId: String,
+      id: "",
+      deliveryAddress: "",
+      phoneNumber: "",
+      state: "",
+      payment: 0,
+      paymentState: false,
+      orderingDate: new Date(),
+      shippingDate: new Date(),
+      userId: "",
     },
   ]);
-  const [err, setError] = useState([]);
+  const [err, setError] = useState("");
 
   const fetchOrders = async () => {
     try {
@@ -28,10 +28,22 @@ export const MyOrderPage = () => {
         }
       );
 
-      setOrders(response.data.result);
+      const formattedOrders = response.data.result.map((order: any) => ({
+        ...order,
+        orderingDate: new Date(order.orderingDate),
+        shippingDate: order.shippingDate ? new Date(order.shippingDate) : null,
+      }));
+
+      setOrders(formattedOrders);
     } catch (error: any) {
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || "An error occurred");
     }
+  };
+
+  const formatedTimestamp = (d: Date) => {
+    const date = d.toISOString().split("T")[0];
+    const time = d.toTimeString().split(" ")[0];
+    return `${date} ${time}`;
   };
 
   useEffect(() => {
@@ -51,8 +63,8 @@ export const MyOrderPage = () => {
             <div className="col-md-5 text-end text-secondary">State</div>
           </div>
         </div>
-        {orders.length == 0 ? (
-          <p>You don't have any order.</p>
+        {orders.length === 0 ? (
+          <p>You don't have any orders.</p>
         ) : (
           orders.map((item, index) => (
             <div className="col-12 mb-3" key={`${index}-${item.id}`}>
@@ -60,16 +72,14 @@ export const MyOrderPage = () => {
                 <div className="col-md-4 d-flex align-items-center">
                   <div>
                     <p className="mb-0">
-                      Delivery Address: {`${item.deliveryAddress}`}
+                      Delivery Address: {item.deliveryAddress}
                     </p>
-                    <p className="mb-0">
-                      Phone Number: {`${item.phoneNumber}`}
-                    </p>
+                    <p className="mb-0">Phone Number: {item.phoneNumber}</p>
                   </div>
                 </div>
                 <div className="col-md-3 d-flex align-items-center">
                   <div>
-                    <p className="mb-0">Payment: ${`${item.payment}`}</p>
+                    <p className="mb-0">Payment: ${item.payment}</p>
                     <p className="mb-0">
                       Payment state: {`${item.paymentState}`}
                     </p>
@@ -78,18 +88,15 @@ export const MyOrderPage = () => {
                 <div className="col-md-5 d-flex justify-content-end">
                   <div>
                     <p className="mb-0">
-                      Ordering Date:{" "}
-                      {`${item.orderingDate.toString().substring(0, 10)}`}
+                      Ordering Date: {formatedTimestamp(item.orderingDate)}
                     </p>
                     <p className="mb-0">
                       Shipping Date:{" "}
-                      {`${
-                        item.shippingDate
-                          ? item.shippingDate.toString().substring(0, 10)
-                          : ""
-                      }`}
+                      {item.shippingDate
+                        ? item.shippingDate.toString().substring(0, 15)
+                        : ""}
                     </p>
-                    <p className="mb-0">State: {`${item.state}`}</p>
+                    <p className="mb-0">State: {item.state}</p>
                   </div>
                 </div>
               </div>

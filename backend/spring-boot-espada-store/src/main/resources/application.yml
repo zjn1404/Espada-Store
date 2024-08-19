@@ -3,6 +3,9 @@ server:
   servlet:
     context-path: /api
 
+client:
+  home-page: "http://localhost:3000"
+
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/espada_store"

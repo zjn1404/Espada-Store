@@ -4,7 +4,6 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 import defaultImg from "../../img/logo/espada.png";
 import { DisplayProduct } from "../ProductsPage/DisplayProducts";
-import { StarsReview } from "../Utils/StarReview";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../auth/utils/AuthContext";
@@ -335,7 +334,6 @@ export const ProductDetailPage = () => {
           <p>Gender: {product?.gender}</p>
           <p>Stock: {product?.stock}</p>
           <p>Description: {product?.description}</p>
-          <StarsReview rating={0} size={32} />
         </div>
       </div>
       <h2 className="display-4" style={{ fontSize: "3rem", fontWeight: "400" }}>
