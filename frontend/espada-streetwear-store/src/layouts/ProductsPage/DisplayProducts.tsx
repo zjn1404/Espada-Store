@@ -7,7 +7,8 @@ import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 
 export const DisplayProduct: React.FC<{ 
   baseUrl: string;
-  notDisplayedProduct ?: string
+  notDisplayedProduct ?: string;
+  displayedAmount ?: number;
 }> = (props) => {
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,6 +16,7 @@ export const DisplayProduct: React.FC<{
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12);
   const [displayedBestSellerAmount] = useState(8);
+  const [displayedYouMayLikeAmount] = useState(4);
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -22,12 +24,13 @@ export const DisplayProduct: React.FC<{
     const fetchProducts = async () => {
       let url;
 
-      if (props.baseUrl.search("search") !== -1) {
-        url = `${props.baseUrl}&page=${currentPage - 1}&size=${productsPerPage}`;
-      } else if (props.baseUrl.search("best-seller") !== -1) {
+      if (props.baseUrl.search("best-seller") !== -1) {
         url = `${props.baseUrl}?page=${currentPage - 1}&size=${displayedBestSellerAmount}`;
-      } else {
-        url = `${props.baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`
+      } else if (props.displayedAmount !== undefined) {
+        url = `${props.baseUrl}?page=${currentPage - 1}&size=${props.displayedAmount}`;
+      }
+       else {
+        url = `${props.baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`;
       }
 
       const response = await fetch(
@@ -119,7 +122,7 @@ export const DisplayProduct: React.FC<{
         ))}
       </div>
       <div className="mt-5 d-flex justify-content-center">
-        {totalPages > 1 && (
+        {totalPages > 1 && props.displayedAmount === undefined && (
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

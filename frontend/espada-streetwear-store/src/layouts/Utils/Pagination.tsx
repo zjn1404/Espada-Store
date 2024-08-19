@@ -1,65 +1,81 @@
+import React from "react";
+
 export const Pagination: React.FC<{
-  currentPage: number,
-  totalPages: number,
-  paginate: any
+  currentPage: number;
+  totalPages: number;
+  paginate: (pageNumber: number) => void;
 }> = (props) => {
+  const { currentPage, totalPages, paginate } = props;
   const pageNumbers = [];
 
-  if (props.currentPage === 1) {
-    pageNumbers.push(props.currentPage);
-    
-    if (props.totalPages >= props.currentPage + 1) {
-      pageNumbers.push(props.currentPage + 1);
+  // Create pagination numbers
+  if (totalPages <= 5) {
+    // If there are 5 or fewer pages, show all
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(i);
     }
-    
-    if (props.totalPages >= props.currentPage + 2) {
-      pageNumbers.push(props.currentPage + 2);
+  } else {
+    // Show a range around the current page
+    if (currentPage > 3) {
+      pageNumbers.push(currentPage - 2);
     }
-    
-  } else if (props.currentPage > 1) {
-    if (props.currentPage >= 3) {
-      pageNumbers.push(props.currentPage - 2);
+    if (currentPage > 2) {
+      pageNumbers.push(currentPage - 1);
     }
-    pageNumbers.push(props.currentPage - 1);
-    
-    pageNumbers.push(props.currentPage);
-
-    if (props.totalPages >= props.totalPages + 1) {
-      pageNumbers.push(props.currentPage + 1);
+    pageNumbers.push(currentPage);
+    if (currentPage < totalPages - 1) {
+      pageNumbers.push(currentPage + 1);
     }
-
-    if (props.totalPages >= props.currentPage + 2) {
-      pageNumbers.push(props.currentPage + 2);
+    if (currentPage < totalPages - 2) {
+      pageNumbers.push(currentPage + 2);
     }
   }
 
   return (
-    <nav aria-label="...">
-      <ul className="pagination">
-        <li className="page-item" onClick={() => props.paginate(1)}>
-          <button className="page-link">
-            First Page
+    <nav aria-label="Page navigation">
+      <ul className="pagination justify-content-center">
+        <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+          <button
+            className={`page-link ${currentPage === 1 ? "text-muted" : ""}`}
+            onClick={() => currentPage > 1 && paginate(1)}
+            disabled={currentPage === 1}
+          >
+            &laquo; First
           </button>
         </li>
         {pageNumbers.map((number) => (
-          <li key={number} className="page-item">
-            <a
-              onClick={() => props.paginate(number)}
-              href="#"
-              className={`page-link ${number === props.currentPage ? "active" : ""}`}
+          <li
+            key={number}
+            className={`page-item ${number === currentPage ? "active" : ""}`}
+          >
+            <button
+              className={`page-link ${
+                number === currentPage
+                  ? "bg-secondary text-white"
+                  : "text-secondary"
+              }`}
+              onClick={() => number !== currentPage && paginate(number)}
             >
-              <button className="page-link">
-                {number}
-              </button>
-            </a>
+              {number}
+            </button>
           </li>
         ))}
-        <li className="page-item" onClick={() => props.paginate(props.totalPages)}>
-          <button className="page-link">
-            Last Page
+        <li
+          className={`page-item ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
+        >
+          <button
+            className={`page-link ${
+              currentPage === totalPages ? "text-muted" : ""
+            }`}
+            onClick={() => currentPage < totalPages && paginate(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            Last &raquo;
           </button>
         </li>
       </ul>
     </nav>
   );
-}
+};

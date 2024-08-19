@@ -31,7 +31,7 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductController {
 
-    @Value("${page-size-default.product}")
+    @Value("${page-size-default.you-may-like}")
     @NonFinal
     Integer PAGE_SIZE;
 

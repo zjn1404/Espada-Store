@@ -13,7 +13,6 @@ import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -71,7 +69,6 @@ public class ProductServiceImp implements ProductService {
 
             CompletableFuture.runAsync(() -> sendNewProductNotification(product));
 
-            log.info("After call sendNewProductNotification");
             return productMapper.toProductResponse(product);
 
         } catch (IOException ex) {
@@ -95,7 +92,6 @@ public class ProductServiceImp implements ProductService {
     }
 
     public void sendNewProductNotification(Product product) {
-        log.info("Send new product notification");
         List<User> users = userRepository.findAllByCustomerDetail_RegisterToGetMail(true);
 
         users.forEach(user -> {

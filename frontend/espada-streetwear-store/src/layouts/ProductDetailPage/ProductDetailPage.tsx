@@ -18,7 +18,7 @@ export const ProductDetailPage = () => {
   const role = useAuth().role;
 
   const productId = window.location.pathname.split("/")[2];
-  const bestSellerUrl = `http://localhost:8080/api/product/subtype/${product?.subtype}`;
+  const youMayLikeUrl = `http://localhost:8080/api/product/subtype/${product?.subtype}`;
   const getImageSrc = (base64: string) => {
     return `data:image/jpeg;base64,${base64}`;
   };
@@ -341,8 +341,9 @@ export const ProductDetailPage = () => {
       </h2>
       <div className="row justify-content-center">
         <DisplayProduct
-          baseUrl={bestSellerUrl}
+          baseUrl={youMayLikeUrl}
           notDisplayedProduct={product?.id}
+          displayedAmount={4}
         />
       </div>
     </div>

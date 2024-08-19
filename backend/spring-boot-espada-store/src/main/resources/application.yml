@@ -39,6 +39,7 @@ jwt:
 page-size-default:
   product: 12
   best-seller: 8
+  you-may-like: 4
 
 verify-code:
   valid-duration: 300 # in second
