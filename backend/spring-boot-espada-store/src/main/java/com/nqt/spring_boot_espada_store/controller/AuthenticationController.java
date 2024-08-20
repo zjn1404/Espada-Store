@@ -1,6 +1,8 @@
 package com.nqt.spring_boot_espada_store.controller;
 
 import com.nqt.spring_boot_espada_store.dto.request.security.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import lombok.experimental.FieldDefaults;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Authentication Controller")
 public class AuthenticationController {
 
     AuthenticationService authenticationService;
@@ -31,6 +34,7 @@ public class AuthenticationController {
     int SUCCESS_REQUEST_CODE;
 
     @PostMapping("/token")
+    @Operation(summary = "Login", description = "API used to login and create access token, refresh token.")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = authenticationService.authenticate(request);
 
@@ -41,6 +45,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
+    @Operation(summary = "Introspect token", description = "API introspects token.")
     public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) {
         IntrospectResponse response = authenticationService.introspect(request);
 
@@ -51,6 +56,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh")
+    @Operation(summary = "Refresh token", description = "API refreshes token.")
     public ApiResponse<AuthenticationResponse> refresh(@RequestBody RefreshTokenRequest request) {
         AuthenticationResponse response = authenticationService.refreshToken(request);
 
@@ -61,6 +67,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Logout", description = "API used to log out and invalidate access token, refresh token")
     public ApiResponse<Void> logout(@RequestBody LogoutRequest request) {
         authenticationService.logout(request);
 
@@ -71,6 +78,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/change-password")
+    @Operation(summary = "Change password", description = "API changes password.")
     public ApiResponse<Object> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         authenticationService.changePassword(request);
 

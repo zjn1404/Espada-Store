@@ -5,6 +5,8 @@ server:
 
 client:
   home-page: "http://localhost:3000"
+  verification-success-page: "http://localhost:3000/verification-success"
+  order-page: "http://localhost:3000/my-order"
 
 spring:
   datasource:

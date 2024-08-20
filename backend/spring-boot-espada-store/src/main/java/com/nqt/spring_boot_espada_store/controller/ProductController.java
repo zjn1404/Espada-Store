@@ -6,6 +6,10 @@ import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
 import com.nqt.spring_boot_espada_store.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -63,6 +67,50 @@ public class ProductController {
     // min page = 1
     @GetMapping
     @Operation(summary = "Get all products", description = "API gets all products.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Successfully retrieved products", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ApiResponse.class),
+                    examples = @ExampleObject(value =
+                            """
+                                    {
+                                      "code": 0,
+                                      "message": "string",
+                                      "result": {
+                                        "content": [
+                                          {
+                                            "id": "string",
+                                            "name": "string",
+                                            "price": 0,
+                                            "color": "string",
+                                            "material": "string",
+                                            "size": "string",
+                                            "form": "string",
+                                            "gender": "string",
+                                            "description": "string",
+                                            "stock": 0,
+                                            "image": "string",
+                                            "subtype": {
+                                              "name": "string",
+                                              "type": {
+                                                "name": "string"
+                                              }
+                                            }
+                                          }
+                                        ],
+                                        "page": {
+                                          "size": "string",
+                                          "number": 0,
+                                          "totalElements": 0,
+                                          "totalPages": 0
+                                        }
+                                      }
+                                    }
+                                    """
+                    )
+            )),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request parameters", content = @Content)
+    })
     public ApiResponse<Page<ProductResponse>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                                      @RequestParam(value = "size", required = false) Integer pageSize,
                                                      @RequestParam(value = "sort", required = false) String sortBy) {

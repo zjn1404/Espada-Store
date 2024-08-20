@@ -2,6 +2,8 @@ package com.nqt.spring_boot_espada_store.controller;
 
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.service.verifycode.VerifyCodeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
@@ -17,6 +19,7 @@ import java.io.IOException;
 @RequestMapping("/verify")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Verify Code Controller")
 public class VerifyCodeController {
 
     VerifyCodeService verifyCodeService;
@@ -25,11 +28,16 @@ public class VerifyCodeController {
     @Value("${success-request-code}")
     int SUCCESS_REQUEST_CODE;
 
+    @NonFinal
+    @Value("${client.verification-success-page}")
+    String CLIENT_VERIFICATION_SUCCESS_PAGE;
+
     @GetMapping
+    @Operation(summary = "Verify code", description = "API verifies code which is sent to user's email after registering a new account.")
     public ApiResponse<Object> verifyCode(@RequestParam("code") String code, @RequestParam("user") String userId, HttpServletResponse response)
             throws MessagingException, IOException {
         verifyCodeService.verify(code, userId);
-        response.sendRedirect("http://localhost:3000/verification-success");
+        response.sendRedirect(CLIENT_VERIFICATION_SUCCESS_PAGE);
         return ApiResponse.builder()
                 .code(SUCCESS_REQUEST_CODE)
                 .message("Verify success")

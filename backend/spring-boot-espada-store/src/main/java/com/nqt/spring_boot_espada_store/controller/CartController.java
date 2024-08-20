@@ -3,6 +3,8 @@ package com.nqt.spring_boot_espada_store.controller;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.CartResponse;
 import com.nqt.spring_boot_espada_store.service.cart.CartService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +18,7 @@ import java.util.List;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Cart Controller")
 public class CartController {
 
     @NonFinal
@@ -25,6 +28,7 @@ public class CartController {
     CartService cartService;
 
     @GetMapping("/{productId}/{size}/{quantity}")
+    @Operation(summary = "Add product to cart", description = "API creates new cart if there's not existing cart and add product into it.")
     public ApiResponse<CartResponse> addToCart(@PathVariable(name = "productId") String productId,
                                                @PathVariable(name = "quantity") int quantity,
                                                @PathVariable(name = "size") String size) {
@@ -37,6 +41,7 @@ public class CartController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all items in customer's cart", description = "API gets all items in logged in customer's cart.")
     public ApiResponse<List<CartResponse>> getAllCarts() {
         List<CartResponse> cartResponses = cartService.getMyCart();
 
@@ -47,6 +52,7 @@ public class CartController {
     }
 
     @PutMapping("/{productId}/{size}/{quantity}")
+    @Operation(summary = "Update item's quantity in logged-in customer's cart", description = "API updates item's quantity in logged-in customer's cart.")
     public ApiResponse<CartResponse> updateQuantity(@PathVariable(name = "productId") String productId,
                                                     @PathVariable(name = "quantity") int quantity,
                                                     @PathVariable(name = "size") String size) {
@@ -59,6 +65,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{productId}/{size}")
+    @Operation(summary = "Delete item in logged-in customer's cart by ID and Size", description = "API deletes item in logged-in customer's cart by ID and Size.")
     public ApiResponse<Object> removeItemFromCart(@PathVariable(name = "productId") String productId,
                                                   @PathVariable(name = "size") String size) {
         cartService.removeItemFromCart(productId, size);
@@ -70,6 +77,7 @@ public class CartController {
     }
 
     @DeleteMapping("/delete-all")
+    @Operation(summary = "Delete all items in logged-in customer's cart", description = "API deletes all items in logged-in customer's cart.")
     public ApiResponse<Object> deleteAllCarts() {
         cartService.deleteAllItemsFromCart();
 

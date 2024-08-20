@@ -50,7 +50,7 @@ public class OrderController {
     }
 
     @GetMapping("/my-order")
-    @Operation(summary = "Get logged in user's order", description = "API gets logged in user's order.")
+    @Operation(summary = "Get logged-in user's order", description = "API gets logged-in user's order.")
     public ApiResponse<List<OrderResponse>> getMyOrders() {
         List<OrderResponse> orderResponses = orderService.getMyOrders();
 
@@ -68,6 +68,7 @@ public class OrderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
+    @Operation(summary = "Get all orders", description = "API gets all orders. Only admin can use this API!")
     public ApiResponse<List<OrderResponse>> getAllOrders() {
         List<OrderResponse> orderResponses = orderService.getAllOrder();
 
@@ -75,6 +76,7 @@ public class OrderController {
     }
 
     @GetMapping("/best-seller")
+    @Operation(summary = "Get bestseller orders", description = "API gets bestseller orders.")
     public ApiResponse<Page<ProductResponse>> getBestSellerOrders(@RequestParam(value = "page", required = false) Integer offset,
                                                                   @RequestParam(value = "size", required = false) Integer pageSize
                                                                   ) {
@@ -85,7 +87,9 @@ public class OrderController {
         return new ApiResponse<>(orderService.getBestSellers(PageRequest.of(offset, pageSize)));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/order-detail/{orderId}")
+    @Operation(summary = "Get order's detail by ID", description = "API gets order's detail by ID. Only admin can use this API!")
     public ApiResponse<List<OrderDetailResponse>> getOrderDetail(@PathVariable("orderId") String orderId) {
         List<OrderDetailResponse> orderDetailResponses = orderService.getOrderDetails(orderId);
 
@@ -94,6 +98,7 @@ public class OrderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{orderId}")
+    @Operation(summary = "Delete order by ID", description = "API gets order by ID. Only admin can use this API!")
     public ApiResponse<Object> deleteOrder(@PathVariable("orderId") String orderId) {
         orderService.deleteOrder(orderId);
 

@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping
-    @Operation(summary = "Update current logged in user", description = "API updates current logged in user")
+    @Operation(summary = "Update current logged-in user", description = "API updates current logged-in user")
     public ApiResponse<UserResponse> updateUser(@RequestBody @Valid UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUser(request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user's information", description = "API gets user's information. Only logged in user or admin can use this API!")
+    @Operation(summary = "Get user's information", description = "API gets user's information. Only logged-in user or admin can use this API!")
     public ApiResponse<UserResponse> getUser(@PathVariable("id") String id) {
         UserResponse userResponse = userService.getUserById(id);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/my-info")
-    @Operation(summary = "Get logged in user's information", description = "API gets logged in user's information.")
+    @Operation(summary = "Get logged-in user's information", description = "API gets logged-in user's information.")
     public ApiResponse<UserResponse> getMyInfo() {
         UserResponse userResponse = userService.getMyInfo();
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
