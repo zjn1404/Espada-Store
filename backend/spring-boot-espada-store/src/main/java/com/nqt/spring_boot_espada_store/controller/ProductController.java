@@ -5,6 +5,8 @@ import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
 import com.nqt.spring_boot_espada_store.service.product.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -29,31 +31,38 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Product Controller")
 public class ProductController {
 
-    @Value("${page-size-default.you-may-like}")
+    @Value("${page-size-default.product}")
     @NonFinal
     Integer PAGE_SIZE;
 
     ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create product", description = "API creates product. Only admin can use this API!")
     public ApiResponse<ProductResponse> create(@ModelAttribute @Valid ProductCreationRequest request) {
         return new ApiResponse<>(productService.createProduct(request));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update product", description = "API creates product. Only admin can use this API!")
     public ApiResponse<ProductResponse> update(@PathVariable("id") String id, @ModelAttribute @Valid ProductUpdateRequest request) {
         return new ApiResponse<>(productService.updateProduct(id, request));
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get product by ID", description = "API gets product by ID.")
     public ApiResponse<ProductResponse> getById(@PathVariable("id") String id) {
         return new ApiResponse<>(productService.getProduct(id));
     }
 
     // min page = 1
     @GetMapping
+    @Operation(summary = "Get all products", description = "API gets all products.")
     public ApiResponse<Page<ProductResponse>> getAll(@RequestParam(value = "page", required = false) Integer offset,
                                                      @RequestParam(value = "size", required = false) Integer pageSize,
                                                      @RequestParam(value = "sort", required = false) String sortBy) {
@@ -66,11 +75,13 @@ public class ProductController {
     }
 
     @GetMapping("/type/{type}")
+    @Operation(summary = "Get all product by type", description = "API gets all products by type.")
     public ApiResponse<List<ProductResponse>> getAllByType(@PathVariable("type") String type) {
         return new ApiResponse<>(productService.getProductsByType(type));
     }
 
     @GetMapping("/subtype/{subtype}")
+    @Operation(summary = "Get all product by subtype", description = "API gets all products by subtype.")
     public ApiResponse<Page<ProductResponse>> getAllBySubtype(@PathVariable("subtype") String subtype,
                                                               @RequestParam(value = "page", required = false) Integer offset,
                                                               @RequestParam(value = "size", required = false) Integer pageSize,
@@ -84,6 +95,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "Get products by keyword", description = "API gets products by keyword.")
     public ApiResponse<Page<ProductResponse>> getAllBySearch(@RequestParam("input") String input,
                                                              @RequestParam(value = "page", required = false) Integer offset,
                                                              @RequestParam(value = "size", required = false) Integer pageSize,
@@ -98,6 +110,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete product by ID", description = "API deletes product by ID. Only admin can use this API!")
     public ApiResponse<Void> delete(@PathVariable("id") String id) {
         productService.deleteProduct(id);
 

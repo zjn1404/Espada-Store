@@ -7,6 +7,8 @@ import com.nqt.spring_boot_espada_store.dto.response.OrderDetailResponse;
 import com.nqt.spring_boot_espada_store.dto.response.OrderResponse;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
 import com.nqt.spring_boot_espada_store.service.order.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +25,7 @@ import java.util.List;
 @RequestMapping("/order")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Tag(name = "Order Controller")
 public class OrderController {
 
     @NonFinal
@@ -32,12 +35,14 @@ public class OrderController {
     OrderService orderService;
 
     @PostMapping
+    @Operation(summary = "Create order", description = "API creates order.")
     public ApiResponse<OrderResponse> createOrder(@RequestBody OrderCreationRequest request) {
         OrderResponse orderResponse = orderService.createOrder(request);
         return new ApiResponse<>(orderResponse);
     }
 
     @PutMapping("/{orderId}")
+    @Operation(summary = "Update order", description = "API updates order.")
     public ApiResponse<OrderResponse> updateOrder(@PathVariable("orderId") String orderId, @RequestBody OrderUpdateRequest request) {
         OrderResponse orderResponse = orderService.updateOrder(orderId, request);
 
@@ -45,6 +50,7 @@ public class OrderController {
     }
 
     @GetMapping("/my-order")
+    @Operation(summary = "Get logged in user's order", description = "API gets logged in user's order.")
     public ApiResponse<List<OrderResponse>> getMyOrders() {
         List<OrderResponse> orderResponses = orderService.getMyOrders();
 
@@ -53,6 +59,7 @@ public class OrderController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
+    @Operation(summary = "Get user's order by ID", description = "API gets user's order by ID. Only admin can use this API!")
     public ApiResponse<List<OrderResponse>> getOrdersByUserId(@PathVariable("userId") String userId) {
         List<OrderResponse> orderResponses = orderService.getOrderByUserId(userId);
 

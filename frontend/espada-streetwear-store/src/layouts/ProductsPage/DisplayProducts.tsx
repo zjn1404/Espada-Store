@@ -16,7 +16,6 @@ export const DisplayProduct: React.FC<{
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12);
   const [displayedBestSellerAmount] = useState(8);
-  const [displayedYouMayLikeAmount] = useState(4);
   const [totalAmountOfProducts, setTotalAmountOfProducts] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 

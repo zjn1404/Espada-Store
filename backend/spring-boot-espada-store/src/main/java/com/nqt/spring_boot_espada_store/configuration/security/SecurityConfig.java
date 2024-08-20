@@ -27,7 +27,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller", "/payment/vnpay/vnpay-return"
+            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller", "/payment/vnpay/vnpay-return", "/api-docs/**", "/swagger-ui/**",
     };
 
     @Bean

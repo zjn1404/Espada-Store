@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,23 +31,30 @@ public class ApplicationInitConfig {
             value = "datasource.driverClassName",
             havingValue = "com.mysql.cj.jdbc.Driver"
     )
-    public ApplicationRunner applicationRunner() {
+    public ApplicationRunner applicationRunner(@Value("${initial-admin-account.id}") String id,
+                                               @Value("${initial-admin-account.username}") String username,
+                                               @Value("${initial-admin-account.password}") String password,
+                                               @Value("${initial-admin-account.email}") String email,
+                                               @Value("${initial-admin-account.phoneNumber}") String phoneNumber,
+                                               @Value("${initial-admin-account.role}") String role,
+                                               @Value("${initial-admin-account.firstName}") String firstName,
+                                               @Value("${initial-admin-account.lastName}") String lastName) {
         return args -> {
             if (!roleRepository.existsById("ADMIN")) {
                 Role adminRole = Role.builder()
-                        .name("ADMIN")
+                        .name(role)
                         .build();
                 roleRepository.save(adminRole);
 
                 User admin = User.builder()
-                        .id("admin")
-                        .username("admin")
-                        .password("adminInit123")
-                        .email("admin@admin.com")
-                        .phoneNumber("0123456789")
+                        .id(id)
+                        .username(username)
+                        .password(password)
+                        .email(email)
+                        .phoneNumber(phoneNumber)
                         .roles(Set.of(adminRole))
-                        .firstName("Admin")
-                        .lastName("Admin")
+                        .firstName(firstName)
+                        .lastName(lastName)
                         .build();
 
                 userRepository.save(admin);

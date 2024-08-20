@@ -36,6 +36,16 @@ jwt:
   valid-duration: 3600 # in second
   refreshable-duration: 360000 # in second
 
+initial-admin-account:
+  id: "admin"
+  username: "admin"
+  password: "admin123"
+  email: "admin@admin.com"
+  phoneNumber: "0123456789"
+  role: "ADMIN"
+  firstName: "Admin"
+  lastName: "Admin"
+
 page-size-default:
   product: 12
   best-seller: 8
@@ -56,3 +66,18 @@ payment:
     return-url: "http://localhost:8080/api/payment/vnpay/vnpay-return"
     orderType: "other"
     success-code: "00"
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+
+open:
+  api:
+    title: "Espada Store API Documentation"
+    version: "v1.0.0"
+    description: "Espada Store API Documentation For Testing."
+    server:
+      url: "http://localhost:8080/api"
+      description: "Server Test."
+    group:
+      package-to-scan: "com.nqt.spring_boot_espada_store.controller"

@@ -343,7 +343,7 @@ export const ProductDetailPage = () => {
         <DisplayProduct
           baseUrl={youMayLikeUrl}
           notDisplayedProduct={product?.id}
-          displayedAmount={4}
+          displayedAmount={5}
         />
       </div>
     </div>

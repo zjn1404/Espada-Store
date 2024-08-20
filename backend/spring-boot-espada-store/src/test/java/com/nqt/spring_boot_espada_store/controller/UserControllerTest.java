@@ -28,7 +28,7 @@ import java.util.Set;
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource("/test.yml")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class UserControllerTest {
 
     @Autowired
