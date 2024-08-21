@@ -1,0 +1,9 @@
+FROM amazoncorretto:17.0.8
+
+ARG FILE_JAR=target/*.jar
+
+ADD ${FILE_JAR} espada-api-service.jar
+
+ENTRYPOINT ["java", "jar", "espada-api-service.jar"]
+
+EXPOSE 8080
