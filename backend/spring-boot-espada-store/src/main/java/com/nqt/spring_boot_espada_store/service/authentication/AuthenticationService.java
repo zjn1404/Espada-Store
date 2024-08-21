@@ -15,5 +15,4 @@ public interface AuthenticationService {
     void changePassword(ChangePasswordRequest request);
 
     void logout(LogoutRequest request);
-
 }

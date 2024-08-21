@@ -1,5 +1,9 @@
 package com.nqt.spring_boot_espada_store.service.customer;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.customer.CustomerDetailUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.CustomerDetailResponse;
@@ -10,17 +14,15 @@ import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.CustomerDetailMapper;
 import com.nqt.spring_boot_espada_store.repository.CustomerRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class CustomerServiceImp implements CustomerDetailService{
+public class CustomerServiceImp implements CustomerDetailService {
 
     CustomerRepository customerRepository;
     UserRepository userRepository;
@@ -29,7 +31,8 @@ public class CustomerServiceImp implements CustomerDetailService{
 
     @Override
     public CustomerDetailResponse create(CustomerDetailCreationRequest request) {
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository
+                .findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (customerRepository.existsById(user.getId())) {
@@ -52,7 +55,8 @@ public class CustomerServiceImp implements CustomerDetailService{
     @Override
     public CustomerDetailResponse update(CustomerDetailUpdateRequest request) {
         User user = getUser();
-        CustomerDetail customerDetail = customerRepository.findById(user.getId())
+        CustomerDetail customerDetail = customerRepository
+                .findById(user.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.CUSTOMER_DETAIL_NOT_EXISTED));
 
         customerMapper.updateCustomerDetail(customerDetail, request);
@@ -66,7 +70,8 @@ public class CustomerServiceImp implements CustomerDetailService{
 
         String username = authentication.getName();
 
-        return userRepository.findByUsername(username)
+        return userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
     }
 }

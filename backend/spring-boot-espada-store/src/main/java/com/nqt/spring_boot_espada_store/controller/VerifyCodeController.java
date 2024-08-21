@@ -1,19 +1,22 @@
 package com.nqt.spring_boot_espada_store.controller;
 
-import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
-import com.nqt.spring_boot_espada_store.service.verifycode.VerifyCodeService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.IOException;
+
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+
+import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
+import com.nqt.spring_boot_espada_store.service.verifycode.VerifyCodeService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/verify")
@@ -33,8 +36,11 @@ public class VerifyCodeController {
     String CLIENT_VERIFICATION_SUCCESS_PAGE;
 
     @GetMapping
-    @Operation(summary = "Verify code", description = "API verifies code which is sent to user's email after registering a new account.")
-    public ApiResponse<Object> verifyCode(@RequestParam("code") String code, @RequestParam("user") String userId, HttpServletResponse response)
+    @Operation(
+            summary = "Verify code",
+            description = "API verifies code which is sent to user's email after registering a new account.")
+    public ApiResponse<Object> verifyCode(
+            @RequestParam("code") String code, @RequestParam("user") String userId, HttpServletResponse response)
             throws MessagingException, IOException {
         verifyCodeService.verify(code, userId);
         response.sendRedirect(CLIENT_VERIFICATION_SUCCESS_PAGE);
@@ -43,5 +49,4 @@ public class VerifyCodeController {
                 .message("Verify success")
                 .build();
     }
-
 }

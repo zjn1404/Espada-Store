@@ -1,0 +1,80 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+client:
+  home-page: "http://localhost:3000"
+  verification-success-page: "http://localhost:3000/verification-success"
+  order-page: "http://localhost:3000/my-order"
+
+spring:
+  jpa:
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nqt460@gmail.com
+    password: "rjkb ygqs qpur gqut"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  task:
+    scheduling:
+      pool:
+        size: 3
+
+jwt:
+  signerKey: "GF8bIi7ezOnrdsZvh1gt1sHc5E8KnJaybTf88q5GecpO4E6NhR0PENFaBM+ZEyVG"
+  refreshSignerKey: "7+78pvfH7Pp4WK8py2tecwSfH+Cvt56WKuWNEDOmqsEaiDwjWh2wBI56+gTMMy9S"
+  valid-duration: 3600 # in second
+  refreshable-duration: 360000 # in second
+
+initial-admin-account:
+  id: "admin"
+  username: "admin"
+  password: "admin123"
+  email: "admin@admin.com"
+  phoneNumber: "0123456789"
+  role: "ADMIN"
+  firstName: "Admin"
+  lastName: "Admin"
+
+page-size-default:
+  product: 12
+  best-seller: 8
+  you-may-like: 4
+
+verify-code:
+  valid-duration: 300 # in second
+
+success-request-code: 1000
+
+payment:
+  vnpay:
+    version: 2.1.0
+    vnp_command: "pay"
+    tmn-code: "UA43J0W0"
+    secret-key: "ZAXWF5MTGRNIU2JE497F8PSNQOZ06YVK"
+    payment-url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+    return-url: "http://localhost:8080/api/payment/vnpay/vnpay-return"
+    orderType: "other"
+    success-code: "00"
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+
+open:
+  api:
+    title: "Espada Store API Documentation"
+    version: "v1.0.0"
+    description: "Espada Store API Documentation For Testing."
+    server:
+      url: "http://localhost:8080/api"
+      description: "Server Test."
+    group:
+      package-to-scan: "com.nqt.spring_boot_espada_store.controller"

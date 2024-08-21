@@ -1,6 +1,7 @@
 package com.nqt.spring_boot_espada_store.dto.response;
 
 import com.nqt.spring_boot_espada_store.entity.Type;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -14,5 +15,4 @@ public class SubtypeResponse {
     String name;
 
     Type type;
-
 }

@@ -1,0 +1,19 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+springdoc:
+  api-docs:
+    path: ${SPRING-DOC-API-PATH}
+
+open:
+  api:
+    title: ${OPEN-API-TITLE}
+    version: ${OPEN-API-VERSION}
+    description: ${OPEN-API-DESCRIPTION}
+    server:
+      url: ${OPEN-API-SERVER-URL}
+      description: ${OPEN-API-SERVER-DESCRIPTION}
+    group:
+      package-to-scan: ${OPEN-API-GROUP-SCANNED-PACKAGE}

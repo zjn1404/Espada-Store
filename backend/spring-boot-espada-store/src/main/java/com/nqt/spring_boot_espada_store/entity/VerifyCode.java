@@ -1,10 +1,11 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Entity(name = "verify_code")
 @Getter
@@ -22,10 +23,11 @@ public class VerifyCode {
     @Column(name = "expiry_date")
     Date expiryDate;
 
-    @OneToOne(cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
-            @JoinColumn(name = "user_id")
+    @OneToOne(
+            cascade = {
+                CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.DETACH, CascadeType.REFRESH
+            })
+    @JoinColumn(name = "user_id")
     User user;
 }

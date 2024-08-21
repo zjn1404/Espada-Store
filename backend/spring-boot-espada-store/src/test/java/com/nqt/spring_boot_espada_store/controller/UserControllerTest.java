@@ -1,11 +1,9 @@
 package com.nqt.spring_boot_espada_store.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
-import com.nqt.spring_boot_espada_store.service.user.UserService;
-import lombok.extern.slf4j.Slf4j;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -16,18 +14,24 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
+import com.nqt.spring_boot_espada_store.service.user.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class UserControllerTest {
 
@@ -105,10 +109,7 @@ public class UserControllerTest {
         String content = objectMapper.writeValueAsString(userCreationRequest);
         Mockito.when(userService.createUser(ArgumentMatchers.any())).thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/user")
-                .content(content)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/user").content(content).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("tuong140912345678"));
@@ -121,8 +122,7 @@ public class UserControllerTest {
         String content = objectMapper.writeValueAsString(userCreationRequestWithUsernameInvalid);
 
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                        .post("/user")
+        mockMvc.perform(MockMvcRequestBuilders.post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -136,10 +136,9 @@ public class UserControllerTest {
         String content = objectMapper.writeValueAsString(userCreationRequestWithPasswordInvalid);
 
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
+        mockMvc.perform(MockMvcRequestBuilders.post("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("2002"));
     }
@@ -152,10 +151,9 @@ public class UserControllerTest {
         String content = objectMapper.writeValueAsString(userUpdateRequest);
         Mockito.when(userService.updateUser(ArgumentMatchers.any())).thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .put("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
+        mockMvc.perform(MockMvcRequestBuilders.put("/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"));
     }
@@ -166,10 +164,10 @@ public class UserControllerTest {
         // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         String content = objectMapper.writeValueAsString(userUpdateRequest);
-        Mockito.when(userService.updateUser(ArgumentMatchers.eq(userResponse.getId()),ArgumentMatchers.any())).thenReturn(userResponse);
+        Mockito.when(userService.updateUser(ArgumentMatchers.eq(userResponse.getId()), ArgumentMatchers.any()))
+                .thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                        .put("/user/" + userResponse.getId())
+        mockMvc.perform(MockMvcRequestBuilders.put("/user/" + userResponse.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -182,8 +180,7 @@ public class UserControllerTest {
         // GIVEN
         Mockito.when(userService.getUserById(ArgumentMatchers.any())).thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/user/"+userResponse.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/" + userResponse.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("tuong140912345678"));
@@ -195,8 +192,7 @@ public class UserControllerTest {
         // GIVEN
         Mockito.when(userService.getMyInfo()).thenReturn(userResponse);
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/user/my-info"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/my-info"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"))
                 .andExpect(MockMvcResultMatchers.jsonPath("result.id").value("tuong140912345678"));
@@ -208,8 +204,7 @@ public class UserControllerTest {
         // GIVEN
         Mockito.when(userService.getUsers()).thenReturn(List.of(userResponse));
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("/user"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/user"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"));
     }
@@ -220,8 +215,7 @@ public class UserControllerTest {
         // GIVEN
         Mockito.doNothing().when(userService).deleteUser(ArgumentMatchers.any());
         // WHEN, THEN
-        mockMvc.perform(MockMvcRequestBuilders
-                        .delete("/user/" + userResponse.getId()))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/" + userResponse.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code").value("1000"));
     }

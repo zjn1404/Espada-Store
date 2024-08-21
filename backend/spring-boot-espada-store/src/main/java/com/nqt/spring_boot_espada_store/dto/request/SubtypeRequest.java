@@ -1,6 +1,7 @@
 package com.nqt.spring_boot_espada_store.dto.request;
 
 import jakarta.validation.constraints.Size;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,5 +17,4 @@ public class SubtypeRequest {
 
     @Size(min = 1, max = 50)
     String type;
-
 }

@@ -3,8 +3,6 @@ package com.nqt.spring_boot_espada_store.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
@@ -16,6 +14,8 @@ import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 import com.nqt.spring_boot_espada_store.service.user.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +31,8 @@ public class UserController {
 
     @Operation(summary = "Create user", description = "API creates user")
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) throws MessagingException, UnsupportedEncodingException {
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request)
+            throws MessagingException, UnsupportedEncodingException {
         UserResponse userResponse = userService.createUser(request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userResponse);
@@ -41,7 +42,8 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update user", description = "API updates user with id. Only admin can use this API!")
-    public ApiResponse<UserResponse> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(
+            @PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
         UserResponse userResponse = userService.updateUser(id, request);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
 
@@ -62,7 +64,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get user's information", description = "API gets user's information. Only logged-in user or admin can use this API!")
+    @Operation(
+            summary = "Get user's information",
+            description = "API gets user's information. Only logged-in user or admin can use this API!")
     public ApiResponse<UserResponse> getUser(@PathVariable("id") String id) {
         UserResponse userResponse = userService.getUserById(id);
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
@@ -84,7 +88,9 @@ public class UserController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all user's information", description = "API gets all user's information. Only admin can use this API!")
+    @Operation(
+            summary = "Get all user's information",
+            description = "API gets all user's information. Only admin can use this API!")
     public ApiResponse<List<UserResponse>> getAllUsers() {
         List<UserResponse> responses = userService.getUsers();
         ApiResponse<List<UserResponse>> apiResponse = new ApiResponse<>();

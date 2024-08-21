@@ -1,18 +1,20 @@
 package com.nqt.spring_boot_espada_store.controller;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.nqt.spring_boot_espada_store.dto.request.TypeRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.TypeResponse;
 import com.nqt.spring_boot_espada_store.service.type.TypeService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/type")
@@ -51,7 +53,9 @@ public class TypeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product type by ID (type's name)", description = "API deletes product type by its name. Only admin can use this api!")
+    @Operation(
+            summary = "Delete product type by ID (type's name)",
+            description = "API deletes product type by its name. Only admin can use this api!")
     public ApiResponse<Void> delete(@PathVariable("id") String id) {
         typeService.deleteTypeById(id);
 

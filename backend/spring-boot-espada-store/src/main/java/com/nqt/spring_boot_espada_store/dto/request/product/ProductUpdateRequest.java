@@ -3,9 +3,11 @@ package com.nqt.spring_boot_espada_store.dto.request.product;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.Min;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -38,5 +40,4 @@ public class ProductUpdateRequest {
     @Lob
     @Nullable
     MultipartFile image;
-
 }

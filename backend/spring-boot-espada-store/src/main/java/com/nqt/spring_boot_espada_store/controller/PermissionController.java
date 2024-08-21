@@ -2,16 +2,16 @@ package com.nqt.spring_boot_espada_store.controller;
 
 import java.util.List;
 
-import com.nqt.spring_boot_espada_store.service.permission.PermissionService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.nqt.spring_boot_espada_store.dto.request.PermissionRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.PermissionResponse;
+import com.nqt.spring_boot_espada_store.service.permission.PermissionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -51,7 +51,9 @@ public class PermissionController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{name}")
-    @Operation(summary = "Delete permission by name", description = "API deletes permission by name. Only admin can use this API!")
+    @Operation(
+            summary = "Delete permission by name",
+            description = "API deletes permission by name. Only admin can use this API!")
     public ApiResponse<Void> deletePermission(@PathVariable("name") String name) {
         permissionService.deleteById(name);
         ApiResponse<Void> apiResponse = new ApiResponse<>();

@@ -1,6 +1,7 @@
 package com.nqt.spring_boot_espada_store.dto.request.security;
 
 import jakarta.validation.constraints.Size;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +16,4 @@ public class ChangePasswordRequest {
 
     @Size(min = 6, message = "PASSWORD_INVALID")
     String newPassword;
-
 }

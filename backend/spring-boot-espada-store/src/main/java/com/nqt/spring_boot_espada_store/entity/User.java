@@ -2,9 +2,10 @@ package com.nqt.spring_boot_espada_store.entity;
 
 import java.util.Set;
 
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -50,7 +51,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_name"))
     Set<Role> roles;
 
-    @OneToOne( mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     CustomerDetail customerDetail;
 

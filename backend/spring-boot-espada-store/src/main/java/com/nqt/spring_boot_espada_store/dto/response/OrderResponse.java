@@ -1,11 +1,11 @@
 package com.nqt.spring_boot_espada_store.dto.response;
 
+import java.util.Date;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Getter
 @Builder
@@ -16,7 +16,8 @@ public class OrderResponse {
 
     String deliveryAddress;
 
-    String phoneNumber;;
+    String phoneNumber;
+    ;
 
     String state;
 
@@ -29,5 +30,4 @@ public class OrderResponse {
     Date shippingDate;
 
     String userId;
-
 }

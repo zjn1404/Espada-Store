@@ -1,10 +1,11 @@
 package com.nqt.spring_boot_espada_store.service.role;
 
-import com.nqt.spring_boot_espada_store.dto.request.RoleRequest;
-import com.nqt.spring_boot_espada_store.dto.response.RoleResponse;
+import java.util.List;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.util.List;
+import com.nqt.spring_boot_espada_store.dto.request.RoleRequest;
+import com.nqt.spring_boot_espada_store.dto.response.RoleResponse;
 
 public interface RoleService {
 
@@ -16,5 +17,4 @@ public interface RoleService {
 
     @PreAuthorize("hasRole('ADMIN')")
     void deleteById(String name);
-
 }

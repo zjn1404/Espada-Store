@@ -1,10 +1,11 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Entity(name = "customer_detail")
 @Getter
@@ -33,15 +34,7 @@ public class CustomerDetail {
     @Column(name = "register_to_get_mail")
     boolean registerToGetMail;
 
-
-    @OneToOne(
-            cascade = {
-                    CascadeType.DETACH,
-                    CascadeType.MERGE,
-                    CascadeType.PERSIST,
-                    CascadeType.REFRESH
-            }
-    )
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @MapsId("customerId")
     @JoinColumn(name = "customer_id")
     User user;

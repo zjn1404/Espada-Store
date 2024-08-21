@@ -1,12 +1,13 @@
 package com.nqt.spring_boot_espada_store.service.product;
 
-import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
-import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
-import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
+import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
+import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
+import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
 
 public interface ProductService {
 

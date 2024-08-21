@@ -1,12 +1,14 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Objects;
+
+import jakarta.persistence.*;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Objects;
 
 @Entity(name = "cart_detail")
 @Getter
@@ -18,18 +20,20 @@ public class CartDetail {
 
     @EmbeddedId
     @AttributeOverrides({
-            @AttributeOverride(name = "cartId", column = @Column(name = "cart_id")),
-            @AttributeOverride(name = "size", column = @Column(name = "size"))
+        @AttributeOverride(name = "cartId", column = @Column(name = "cart_id")),
+        @AttributeOverride(name = "size", column = @Column(name = "size"))
     })
     CartDetailId cartDetailId;
 
     @Column(name = "quantity")
     int quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.DETACH, CascadeType.REFRESH
+            })
     @MapsId("cartId")
     @JoinColumn(name = "cart_id")
     @JsonIgnore

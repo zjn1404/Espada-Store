@@ -1,13 +1,15 @@
 package com.nqt.spring_boot_espada_store.service.cleanup;
 
-import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import java.util.Date;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Service
 @RequiredArgsConstructor
