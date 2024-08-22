@@ -2,6 +2,7 @@ package com.nqt.spring_boot_espada_store.service.cleanup;
 
 import java.util.Date;
 
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class ExpiredTokenCleanupService {
     InvalidatedTokenRepository invalidatedTokenRepository;
 
     @Scheduled(fixedDelay = 86400000) // ms
+    @Transactional
     public void deleteExpiredTokens() {
         invalidatedTokenRepository.deleteAllByExpiryTimeBefore(new Date());
     }

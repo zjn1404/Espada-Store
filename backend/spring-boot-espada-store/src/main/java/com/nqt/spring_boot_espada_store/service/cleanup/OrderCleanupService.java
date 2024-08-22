@@ -6,6 +6,7 @@ import java.time.YearMonth;
 import java.util.Date;
 import java.util.EnumSet;
 
+import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class OrderCleanupService {
     static EnumSet<Month> TARGET_MONTHS = EnumSet.of(Month.MARCH, Month.JUNE, Month.SEPTEMBER, Month.DECEMBER);
 
     @Scheduled(cron = "0 0 0 L 3,6,9,12 ?")
+    @Transactional
     public void deleteOrdersOnLastDayOfTargetMonths() {
         LocalDate today = LocalDate.now();
         Month currentMonth = today.getMonth();
