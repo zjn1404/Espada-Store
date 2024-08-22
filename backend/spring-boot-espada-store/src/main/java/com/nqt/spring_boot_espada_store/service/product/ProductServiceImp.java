@@ -10,6 +10,8 @@ import java.util.concurrent.CompletableFuture;
 
 import jakarta.mail.MessagingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ProductServiceImp implements ProductService {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductServiceImp.class);
     ProductRepository productRepository;
     SubtypeRepository subtypeRepository;
     TypeRepository typeRepository;

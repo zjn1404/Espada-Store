@@ -28,7 +28,7 @@ public class OpenApiConfig {
             @Value("${initial-admin-account.password}") String password) {
 
         description += String.format(
-                "<br>An admin account has been created with <b>username: %s</b> and <b>password: %s</b>.\nYou can use it to access all APIs.",
+                "<br>An admin account has been created with <b>username: %s</b> and <b>password: %s</b>. You can use it to access all APIs.",
                 username, password);
 
         return new OpenAPI()

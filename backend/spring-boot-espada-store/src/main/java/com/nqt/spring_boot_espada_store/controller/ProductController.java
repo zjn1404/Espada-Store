@@ -159,7 +159,7 @@ public class ProductController {
     @GetMapping("/search")
     @Operation(summary = "Get products by keyword", description = "API gets products by keyword.")
     public ApiResponse<Page<ProductResponse>> getAllBySearch(
-            @RequestParam("input") String input,
+            @RequestParam(value = "input") String input,
             @RequestParam(value = "page", required = false) Integer offset,
             @RequestParam(value = "size", required = false) Integer pageSize,
             @RequestParam(value = "sort", required = false) String sortBy) {

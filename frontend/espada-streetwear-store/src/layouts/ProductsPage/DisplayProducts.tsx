@@ -5,10 +5,10 @@ import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { Pagination } from "../Utils/Pagination";
 import failToFetchImg from "../../img/error/fail-to-fetch.jpg";
 
-export const DisplayProduct: React.FC<{ 
+export const DisplayProduct: React.FC<{
   baseUrl: string;
-  notDisplayedProduct ?: string;
-  displayedAmount ?: number;
+  notDisplayedProduct?: string;
+  displayedAmount?: number;
 }> = (props) => {
   const [products, setProducts] = useState<ProductModel[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,17 +24,24 @@ export const DisplayProduct: React.FC<{
       let url;
 
       if (props.baseUrl.search("best-seller") !== -1) {
-        url = `${props.baseUrl}?page=${currentPage - 1}&size=${displayedBestSellerAmount}`;
+        url = `${props.baseUrl}?page=${
+          currentPage - 1
+        }&size=${displayedBestSellerAmount}`;
       } else if (props.displayedAmount !== undefined) {
-        url = `${props.baseUrl}?page=${currentPage - 1}&size=${props.displayedAmount}`;
-      }
-       else {
-        url = `${props.baseUrl}?page=${currentPage - 1}&size=${productsPerPage}`;
+        url = `${props.baseUrl}?page=${currentPage - 1}&size=${
+          props.displayedAmount
+        }`;
+      } else if (props.baseUrl.search("input") !== -1) {
+        url = `${props.baseUrl}&page=${
+          currentPage - 1
+        }&size=${productsPerPage}`;
+      } else {
+        url = `${props.baseUrl}?page=${
+          currentPage - 1
+        }&size=${productsPerPage}`;
       }
 
-      const response = await fetch(
-        url
-      );
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error("Something went wrong!");
@@ -47,10 +54,8 @@ export const DisplayProduct: React.FC<{
       setTotalPages(responseJson.result.page.totalPages);
 
       const loadedProducts: ProductModel[] = responseData
-      .filter((product: any) => product.id !== props.notDisplayedProduct)
-      .map(
-        (product: any) => ({
-          
+        .filter((product: any) => product.id !== props.notDisplayedProduct)
+        .map((product: any) => ({
           id: product.id,
           name: product.name,
           price: product.price,
@@ -62,8 +67,7 @@ export const DisplayProduct: React.FC<{
           subtype: product.subtype.name,
           image: product.image,
           description: product.description,
-        })
-      );
+        }));
 
       setProducts(loadedProducts);
       setIsLoading(false);
@@ -83,24 +87,32 @@ export const DisplayProduct: React.FC<{
 
   if (httpError) {
     return (
-      <section className="d-flex justify-content-center align-items-center" style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <img src={failToFetchImg} alt="Failed to fetch" style={{width: '100%', 
-          height: '100%'}} />
-        <div style={{ 
-          position: 'absolute', 
-          top: 0, 
-          left: 0, 
-          width: '100%', 
-          height: '100%', 
-          backgroundColor: 'rgba(0, 0, 0, 0.7)',
-          color: 'white', 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          fontSize: '4rem', 
-          fontWeight: 'bold', 
-          textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)'
-        }}>
+      <section
+        className="d-flex justify-content-center align-items-center"
+        style={{ position: "relative", width: "100%", height: "100%" }}
+      >
+        <img
+          src={failToFetchImg}
+          alt="Failed to fetch"
+          style={{ width: "100%", height: "100%" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            color: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "4rem",
+            fontWeight: "bold",
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
+          }}
+        >
           FAIL TO LOAD PRODUCT
         </div>
       </section>

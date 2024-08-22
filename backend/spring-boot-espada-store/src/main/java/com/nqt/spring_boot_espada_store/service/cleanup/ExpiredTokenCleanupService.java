@@ -18,8 +18,8 @@ public class ExpiredTokenCleanupService {
 
     InvalidatedTokenRepository invalidatedTokenRepository;
 
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteExpiredTokensEveryMonth() {
+    @Scheduled(fixedDelay = 86400000) // ms
+    public void deleteExpiredTokens() {
         invalidatedTokenRepository.deleteAllByExpiryTimeBefore(new Date());
     }
 }
