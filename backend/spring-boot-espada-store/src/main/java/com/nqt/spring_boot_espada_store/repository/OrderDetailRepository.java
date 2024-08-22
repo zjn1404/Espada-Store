@@ -1,14 +1,15 @@
 package com.nqt.spring_boot_espada_store.repository;
 
-import com.nqt.spring_boot_espada_store.entity.OrderDetail;
-import com.nqt.spring_boot_espada_store.entity.OrderDetailId;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.nqt.spring_boot_espada_store.entity.OrderDetail;
+import com.nqt.spring_boot_espada_store.entity.OrderDetailId;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, OrderDetailId> {

@@ -1,9 +1,10 @@
 package com.nqt.spring_boot_espada_store.repository;
 
-import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
+import java.util.Date;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Date;
+import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
 
 public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedToken, String> {
     boolean existsByRfId(String rfId);

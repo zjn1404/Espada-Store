@@ -1,8 +1,8 @@
 package com.nqt.spring_boot_espada_store.service.cart;
 
-import com.nqt.spring_boot_espada_store.dto.response.CartResponse;
-
 import java.util.List;
+
+import com.nqt.spring_boot_espada_store.dto.response.CartResponse;
 
 public interface CartService {
 
@@ -15,5 +15,4 @@ public interface CartService {
     void deleteAllItemsFromCart();
 
     List<CartResponse> getMyCart();
-
 }

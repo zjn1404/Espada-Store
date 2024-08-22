@@ -1,18 +1,20 @@
 package com.nqt.spring_boot_espada_store.controller;
 
+import java.util.List;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
 import com.nqt.spring_boot_espada_store.dto.request.SubtypeRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ApiResponse;
 import com.nqt.spring_boot_espada_store.dto.response.SubtypeResponse;
 import com.nqt.spring_boot_espada_store.service.subtype.SubtypeService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/subtype")
@@ -25,15 +27,17 @@ public class SubtypeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    @Operation(summary = "Create product subtype", description = "API creates product subtype. Only admin can use this API!")
+    @Operation(
+            summary = "Create product subtype",
+            description = "API creates product subtype. Only admin can use this API!")
     public ApiResponse<SubtypeResponse> create(@RequestBody SubtypeRequest subtypeRequest) {
         return new ApiResponse<>(subtypeService.create(subtypeRequest));
     }
 
-//    @GetMapping
-//    public ApiResponse<SubtypeResponse> getById(@RequestParam("id") String id) {
-//        return new ApiResponse<>(subtypeService.getById(id));
-//    }
+    //    @GetMapping
+    //    public ApiResponse<SubtypeResponse> getById(@RequestParam("id") String id) {
+    //        return new ApiResponse<>(subtypeService.getById(id));
+    //    }
 
     @GetMapping
     @Operation(summary = "Get all product subtypes", description = "API gets all product subtypes.")
@@ -49,7 +53,9 @@ public class SubtypeController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product subtype by ID", description = "API delete product subtype by ID. Only admin can use this API!")
+    @Operation(
+            summary = "Delete product subtype by ID",
+            description = "API delete product subtype by ID. Only admin can use this API!")
     public ApiResponse<Void> delete(@PathVariable("id") String id) {
         subtypeService.delete(id);
 

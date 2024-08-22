@@ -1,5 +1,17 @@
 package com.nqt.spring_boot_espada_store.service.order;
 
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import jakarta.transaction.Transactional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.nqt.spring_boot_espada_store.dto.request.order.OrderCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.order.OrderUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.OrderDetailResponse;
@@ -14,24 +26,15 @@ import com.nqt.spring_boot_espada_store.repository.OrderDetailRepository;
 import com.nqt.spring_boot_espada_store.repository.OrderRepository;
 import com.nqt.spring_boot_espada_store.repository.ProductRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OrderServiceImp implements OrderService{
+public class OrderServiceImp implements OrderService {
 
     enum ORDER_STATE {
         DEFAULT_STATE("waiting-confirm"),
@@ -67,7 +70,8 @@ public class OrderServiceImp implements OrderService{
         order.setState(ORDER_STATE.DEFAULT_STATE.status);
         order.setOrderingDate(orderDate);
         order.setUser(user);
-        order.setId(user.getId() + "-" + orderDate.toString().replaceAll(" ", "").trim());
+        order.setId(
+                user.getId() + "-" + orderDate.toString().replaceAll(" ", "").trim());
         order.setOrderDetails(buildOrderDetails(order, request.getProductSizeQuantity()));
         if (null == order.getOrderDetails() || order.getOrderDetails().isEmpty()) {
             throw new AppException(ErrorCode.CART_NOT_EXISTED);
@@ -79,7 +83,9 @@ public class OrderServiceImp implements OrderService{
         Set<OrderDetail> orderDetails = new HashSet<>();
         for (Map.Entry<String, Map<String, Integer>> entry : productSizeQuantity.entrySet()) {
             String productId = entry.getKey();
-            Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+            Product product = productRepository
+                    .findById(productId)
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
             AtomicInteger quantity = new AtomicInteger();
             entry.getValue().forEach((key, value) -> {
                 OrderDetail orderDetail = new OrderDetail(order, product, key, value);
@@ -96,7 +102,8 @@ public class OrderServiceImp implements OrderService{
     @Override
     @Transactional
     public OrderResponse updateOrder(String orderId, OrderUpdateRequest request) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
+        Order order =
+                orderRepository.findById(orderId).orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_EXISTED));
         orderMapper.updateOrder(order, request);
         if (request.getState() != null) {
             String state = ORDER_STATE.valueOf(request.getState()).status;
@@ -119,7 +126,9 @@ public class OrderServiceImp implements OrderService{
         for (Map.Entry<String, Integer> entry : productAndQuantity.entrySet()) {
             String productId = entry.getKey();
             int quantity = entry.getValue();
-            Product product = productRepository.findById(productId).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+            Product product = productRepository
+                    .findById(productId)
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
             product.setStock(product.getStock() + quantity);
             productRepository.saveAndFlush(product);
         }
@@ -128,7 +137,9 @@ public class OrderServiceImp implements OrderService{
     @Override
     public List<OrderResponse> getMyOrders() {
         User user = getUser();
-        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAllByUser(user).stream().map(orderMapper::toOrderResponse).toList());
+        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAllByUser(user).stream()
+                .map(orderMapper::toOrderResponse)
+                .toList());
         orders.sort((d1, d2) -> d2.getOrderingDate().compareTo(d1.getOrderingDate()));
         return orders;
     }
@@ -137,12 +148,16 @@ public class OrderServiceImp implements OrderService{
     public List<OrderResponse> getOrderByUserId(String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        return orderRepository.findAllByUser(user).stream().map(orderMapper::toOrderResponse).toList();
+        return orderRepository.findAllByUser(user).stream()
+                .map(orderMapper::toOrderResponse)
+                .toList();
     }
 
     @Override
     public List<OrderResponse> getAllOrder() {
-        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAll().stream().map(orderMapper::toOrderResponse).toList());
+        List<OrderResponse> orders = new ArrayList<>(orderRepository.findAll().stream()
+                .map(orderMapper::toOrderResponse)
+                .toList());
         orders.sort((d1, d2) -> d2.getOrderingDate().compareTo(d1.getOrderingDate()));
         return orders;
     }
@@ -151,8 +166,8 @@ public class OrderServiceImp implements OrderService{
     public Page<ProductResponse> getBestSellers(Pageable pageable) {
         Page<String> bestSellerIds = orderDetailRepository.findTop8BestSellers(pageable);
         List<ProductResponse> bestSellers = new ArrayList<>();
-        bestSellerIds.forEach(bestSellerId ->
-                bestSellers.add(productMapper.toProductResponse(productRepository.findById(bestSellerId)
+        bestSellerIds.forEach(bestSellerId -> bestSellers.add(productMapper.toProductResponse(productRepository
+                .findById(bestSellerId)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED)))));
 
         return new PageImpl<>(bestSellers);
@@ -160,7 +175,9 @@ public class OrderServiceImp implements OrderService{
 
     @Override
     public List<OrderDetailResponse> getOrderDetails(String orderId) {
-        return orderDetailRepository.findAllByOrderId(orderId).stream().map(orderMapper::toOrderDetailResponse).toList();
+        return orderDetailRepository.findAllByOrderId(orderId).stream()
+                .map(orderMapper::toOrderDetailResponse)
+                .toList();
     }
 
     @Override
@@ -171,7 +188,8 @@ public class OrderServiceImp implements OrderService{
     private User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return userRepository.findByUsername(authentication.getName())
+        return userRepository
+                .findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 }

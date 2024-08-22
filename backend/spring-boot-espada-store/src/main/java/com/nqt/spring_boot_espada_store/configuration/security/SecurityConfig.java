@@ -23,16 +23,27 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_POST_ENDPOINTS = {
-            "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh", "/customer-info",
+        "/user", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh", "/customer-info",
     };
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {
-            "/product/**", "/type/**", "/subtype/**", "/verify/**", "order/best-seller", "/payment/vnpay/vnpay-return",
-            "/api-docs/**", "/swagger-ui/**", "/subtype/**"
+        "/product/**",
+        "/type/**",
+        "/subtype/**",
+        "/verify/**",
+        "order/best-seller",
+        "/payment/vnpay/vnpay-return",
+        "/api-docs/**",
+        "/swagger-ui/**",
+        "/subtype/**"
     };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomJwtDecoder customJwtDecoder, AfterBearerTokenAuthenticationFilterExceptionHandler exceptionHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            CustomJwtDecoder customJwtDecoder,
+            AfterBearerTokenAuthenticationFilterExceptionHandler exceptionHandler)
+            throws Exception {
 
         http.addFilterBefore(exceptionHandler, LogoutFilter.class);
 
@@ -45,7 +56,8 @@ public class SecurityConfig {
                 .authenticated());
 
         http.oauth2ResourceServer(configurer -> configurer
-                .jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
+                .jwt(jwtConfigurer -> jwtConfigurer
+                        .decoder(customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
 

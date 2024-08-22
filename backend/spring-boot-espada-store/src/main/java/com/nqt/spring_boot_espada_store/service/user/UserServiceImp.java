@@ -4,31 +4,32 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 
-import com.nqt.spring_boot_espada_store.utils.Utils;
-import com.nqt.spring_boot_espada_store.entity.VerifyCode;
-import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
 import jakarta.mail.MessagingException;
+
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.nqt.spring_boot_espada_store.dto.request.user.UserCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.user.UserUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.UserResponse;
 import com.nqt.spring_boot_espada_store.entity.Role;
 import com.nqt.spring_boot_espada_store.entity.User;
+import com.nqt.spring_boot_espada_store.entity.VerifyCode;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.UserMapper;
 import com.nqt.spring_boot_espada_store.repository.RoleRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
+import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
+import com.nqt.spring_boot_espada_store.utils.Utils;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

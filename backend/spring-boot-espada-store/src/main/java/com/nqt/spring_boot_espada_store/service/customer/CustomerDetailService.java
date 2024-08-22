@@ -11,5 +11,4 @@ public interface CustomerDetailService {
     CustomerDetailResponse getCustomerDetail();
 
     CustomerDetailResponse update(CustomerDetailUpdateRequest request);
-
 }

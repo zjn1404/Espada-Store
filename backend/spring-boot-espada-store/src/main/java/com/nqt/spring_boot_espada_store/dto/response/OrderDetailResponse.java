@@ -15,5 +15,4 @@ public class OrderDetailResponse {
     String size;
 
     int quantity;
-
 }

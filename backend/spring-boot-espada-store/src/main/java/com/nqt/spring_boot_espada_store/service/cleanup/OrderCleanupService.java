@@ -1,24 +1,25 @@
 package com.nqt.spring_boot_espada_store.service.cleanup;
 
-import com.nqt.spring_boot_espada_store.repository.OrderRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
 import java.util.Date;
 import java.util.EnumSet;
 
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import com.nqt.spring_boot_espada_store.repository.OrderRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class OrderCleanupService{
-
+public class OrderCleanupService {
 
     OrderRepository orderRepository;
 

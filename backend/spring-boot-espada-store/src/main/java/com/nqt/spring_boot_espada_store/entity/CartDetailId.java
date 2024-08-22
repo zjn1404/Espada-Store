@@ -1,13 +1,14 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Embeddable;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.io.Serializable;
 
 @Embeddable
 @Data

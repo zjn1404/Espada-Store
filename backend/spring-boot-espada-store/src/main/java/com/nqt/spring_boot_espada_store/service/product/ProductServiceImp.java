@@ -1,5 +1,19 @@
 package com.nqt.spring_boot_espada_store.service.product;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+
+import jakarta.mail.MessagingException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
+
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductCreationRequest;
 import com.nqt.spring_boot_espada_store.dto.request.product.ProductUpdateRequest;
 import com.nqt.spring_boot_espada_store.dto.response.ProductResponse;
@@ -9,21 +23,10 @@ import com.nqt.spring_boot_espada_store.exception.ErrorCode;
 import com.nqt.spring_boot_espada_store.mapper.ProductMapper;
 import com.nqt.spring_boot_espada_store.repository.*;
 import com.nqt.spring_boot_espada_store.utils.Utils;
-import jakarta.mail.MessagingException;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +57,8 @@ public class ProductServiceImp implements ProductService {
                 img = request.getImage().getBytes();
             }
 
-            Subtype subtype = subtypeRepository.findById(request.getSubtype())
+            Subtype subtype = subtypeRepository
+                    .findById(request.getSubtype())
                     .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
 
             Product product = productMapper.toProduct(request);
@@ -111,8 +115,8 @@ public class ProductServiceImp implements ProductService {
                 img = request.getImage().getBytes();
             }
 
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+            Product product =
+                    productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
             productMapper.updateProduct(product, request);
 
             if (img != null) {
@@ -131,8 +135,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public ProductResponse getProduct(String id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+        Product product =
+                productRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         return productMapper.toProductResponse(product);
     }
@@ -144,8 +148,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsByType(String type) {
-        Type foundType = typeRepository.findById(type)
-                .orElseThrow(() -> new AppException(ErrorCode.TYPE_NOT_EXISTED));
+        Type foundType = typeRepository.findById(type).orElseThrow(() -> new AppException(ErrorCode.TYPE_NOT_EXISTED));
 
         return productRepository.findAllByType(foundType).stream()
                 .map(productMapper::toProductResponse)
@@ -154,8 +157,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public List<ProductResponse> getProductsBySubtype(String subtype) {
-        Subtype foundSubtype = subtypeRepository.findById(subtype)
-                .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
+        Subtype foundSubtype =
+                subtypeRepository.findById(subtype).orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
 
         return productRepository.findAllBySubtype(foundSubtype).stream()
                 .map(productMapper::toProductResponse)
@@ -164,8 +167,8 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     public Page<ProductResponse> getProductsBySubtype(String subtype, PageRequest request) {
-        Subtype foundSubtype = subtypeRepository.findById(subtype)
-                .orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
+        Subtype foundSubtype =
+                subtypeRepository.findById(subtype).orElseThrow(() -> new AppException(ErrorCode.SUBTYPE_NOT_EXISTED));
 
         return productRepository.findAllBySubtype(foundSubtype, request).map(productMapper::toProductResponse);
     }

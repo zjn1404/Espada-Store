@@ -1,10 +1,9 @@
 package com.nqt.spring_boot_espada_store.dto.response;
 
-import com.nqt.spring_boot_espada_store.entity.User;
+import java.util.Date;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Getter
 @Builder
@@ -22,5 +21,4 @@ public class CustomerDetailResponse {
     Date dob;
 
     boolean registerToGetMail;
-
 }

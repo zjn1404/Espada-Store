@@ -1,11 +1,11 @@
 package com.nqt.spring_boot_espada_store.dto.request.order;
 
+import java.util.Date;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Getter
 @Builder
@@ -17,5 +17,4 @@ public class OrderUpdateRequest {
     Boolean paymentState;
 
     Date shippingDate;
-
 }

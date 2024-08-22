@@ -7,11 +7,6 @@ import java.util.Date;
 import java.util.StringJoiner;
 import java.util.UUID;
 
-import com.nqt.spring_boot_espada_store.dto.request.security.*;
-import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
-import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
-import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,17 +19,22 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nqt.spring_boot_espada_store.dto.request.security.*;
 import com.nqt.spring_boot_espada_store.dto.response.AuthenticationResponse;
 import com.nqt.spring_boot_espada_store.dto.response.IntrospectResponse;
+import com.nqt.spring_boot_espada_store.entity.InvalidatedToken;
 import com.nqt.spring_boot_espada_store.entity.User;
 import com.nqt.spring_boot_espada_store.exception.AppException;
 import com.nqt.spring_boot_espada_store.exception.ErrorCode;
+import com.nqt.spring_boot_espada_store.repository.InvalidatedTokenRepository;
 import com.nqt.spring_boot_espada_store.repository.UserRepository;
+import com.nqt.spring_boot_espada_store.repository.VerifyCodeRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -73,9 +73,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
             isValid = false;
         }
 
-        return IntrospectResponse.builder()
-                .valid(isValid)
-                .build();
+        return IntrospectResponse.builder().valid(isValid).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -101,19 +99,18 @@ public class AuthenticationServiceImp implements AuthenticationService {
         try {
             SignedJWT signedJWT = verifyToken(request.getToken(), true);
 
-            User user = userRepository.findByUsername(signedJWT.getJWTClaimsSet().getSubject())
+            User user = userRepository
+                    .findByUsername(signedJWT.getJWTClaimsSet().getSubject())
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
             String id = signedJWT.getJWTClaimsSet().getJWTID();
             String acId = signedJWT.getJWTClaimsSet().getClaim("acId").toString();
             Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-            invalidatedTokenRepository.save(
-                    InvalidatedToken.builder()
-                            .acId(acId)
-                            .rfId(id)
-                            .expiryTime(expiration)
-                            .build()
-            );
+            invalidatedTokenRepository.save(InvalidatedToken.builder()
+                    .acId(acId)
+                    .rfId(id)
+                    .expiryTime(expiration)
+                    .build());
 
             return buildAuthenticationResponse(user);
 
@@ -130,7 +127,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .isSuccess(true).build();
+                .isSuccess(true)
+                .build();
     }
 
     public void logout(LogoutRequest request) {
@@ -140,23 +138,20 @@ public class AuthenticationServiceImp implements AuthenticationService {
             String acId = signedJWT.getJWTClaimsSet().getJWTID();
             String rfId = signedJWT.getJWTClaimsSet().getClaim("rfId").toString();
             Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
-            expiration = new Date(expiration.getTime() + (REFRESHABLE_DURATION - VALID_DURATION)*1000);
+            expiration = new Date(expiration.getTime() + (REFRESHABLE_DURATION - VALID_DURATION) * 1000);
 
-            invalidatedTokenRepository.save(
-                    InvalidatedToken.builder()
-                            .acId(acId)
-                            .rfId(rfId)
-                            .expiryTime(expiration)
-                            .build()
-            );
+            invalidatedTokenRepository.save(InvalidatedToken.builder()
+                    .acId(acId)
+                    .rfId(rfId)
+                    .expiryTime(expiration)
+                    .build());
 
         } catch (Exception ex) {
             log.error(ex.getMessage());
         }
     }
 
-    private SignedJWT verifyToken(String token, boolean isRefresh)
-            throws JOSEException, ParseException {
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
 
         JWSVerifier verifier;
 
@@ -208,12 +203,13 @@ public class AuthenticationServiceImp implements AuthenticationService {
     }
 
     private JWTClaimsSet buildAccessTokenClaims(User user, long duration, String id, String otherId) {
-        return  new JWTClaimsSet.Builder()
+        return new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .jwtID(id)
                 .issuer("nqt.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(duration, ChronoUnit.SECONDS).toEpochMilli()))
+                .expirationTime(new Date(
+                        Instant.now().plus(duration, ChronoUnit.SECONDS).toEpochMilli()))
                 .claim("rfId", otherId)
                 .claim("scope", buildScope(user))
                 .build();
@@ -225,7 +221,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
                 .jwtID(id)
                 .issuer("nqt.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(duration, ChronoUnit.SECONDS).toEpochMilli()))
+                .expirationTime(new Date(
+                        Instant.now().plus(duration, ChronoUnit.SECONDS).toEpochMilli()))
                 .claim("acId", otherId)
                 .claim("scope", buildScope(user))
                 .build();
@@ -244,7 +241,8 @@ public class AuthenticationServiceImp implements AuthenticationService {
 
     public void changePassword(ChangePasswordRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName())
+        User user = userRepository
+                .findByUsername(authentication.getName())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {

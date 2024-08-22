@@ -1,12 +1,14 @@
 package com.nqt.spring_boot_espada_store.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Date;
 import java.util.Set;
+
+import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity(name = "`order`")
 @Getter
@@ -42,10 +44,12 @@ public class Order {
     @Column(name = "shipping_date")
     Date shippingDate;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH
-    })
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.DETACH, CascadeType.REFRESH
+            })
     @JoinColumn(name = "customer_id")
     User user;
 

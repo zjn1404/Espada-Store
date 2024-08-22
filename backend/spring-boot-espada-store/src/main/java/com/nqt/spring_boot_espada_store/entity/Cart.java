@@ -1,10 +1,11 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Entity(name = "cart")
 @Getter
@@ -21,20 +22,18 @@ public class Cart {
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH
-            }
-    )
+                CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.DETACH, CascadeType.REFRESH
+            })
     @JoinColumn(name = "customer_id")
     User user;
 
     @ManyToOne(
             fetch = FetchType.LAZY,
             cascade = {
-                    CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH
-            }
-    )
+                CascadeType.PERSIST, CascadeType.MERGE,
+                CascadeType.DETACH, CascadeType.REFRESH
+            })
     @JoinColumn(name = "product_id")
     Product product;
 
@@ -47,4 +46,3 @@ public class Cart {
         this.product = product;
     }
 }
-

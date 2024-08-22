@@ -1,12 +1,13 @@
 package com.nqt.spring_boot_espada_store.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Date;
 
 @Entity(name = "invalidated_token")
 @Getter

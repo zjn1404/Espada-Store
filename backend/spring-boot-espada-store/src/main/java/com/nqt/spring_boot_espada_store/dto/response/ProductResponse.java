@@ -1,7 +1,9 @@
 package com.nqt.spring_boot_espada_store.dto.response;
 
-import com.nqt.spring_boot_espada_store.entity.Subtype;
 import jakarta.persistence.Lob;
+
+import com.nqt.spring_boot_espada_store.entity.Subtype;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -36,5 +38,4 @@ public class ProductResponse {
     String image;
 
     Subtype subtype;
-
 }
