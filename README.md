@@ -97,6 +97,17 @@ These pages are for admin use only.
 
 ![Database Schema](./readme-img/db.png)
 
+### 8. Error Code
+
+| HTTP Status           | Error Side (Developer, Client, Undefined) | Error Code |
+|-----------------------|-------------------------------------------|------------|
+| Internal Server Error | Undefined                                 | 9999       |
+| Internal Server Error | Developer                                 | 1xxx       |
+| Bad Request           | Client                                    | 2xxx       |
+| Unauthorized          | Client                                    | 3xxx       |
+| Forbidden             | Client                                    | 4xxx       |
+| Not Found             | Client                                    | 5xxx       |
+
 ## III. Running the Application
 
 ### Prerequisites
