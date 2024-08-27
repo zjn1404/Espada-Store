@@ -13,6 +13,7 @@ This is an ecommerce website that sells streetwear clothes, inspired by [ILSN](h
   - [Product Upload/Update](#5-product-uploadupdate)
   - [Clean Up](#6-clean-up)
   - [Database Schema](#7-project-database)
+  - [Error Code](#8-error-code)
 - [Running the Application](#iii-running-the-application)
   - [Prerequisites](#prerequisites)
   - [Database Setup](#database-setup)
